@@ -1,0 +1,33 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.AdminUI" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryVariant">@color/teal</item>
+        <item name="backgroundColor">@color/backgroundColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/purple</item>
+        <item name="colorSecondaryVariant">@color/red</item>
+        <item name="colorOnSecondary">@color/dark_grey</item>
+        <item name="colorAccent">@color/light_grey</item>
+        <item name="colorSurface">@color/light_grey</item>
+        <item name="colorOnBackground">@color/black</item>
+        <!-- other color -->
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/backgroundColor</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowAnimationStyle">@style/animation</item>
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="Theme.SearchView" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:editTextBackground">@android:color/transparent</item>
+        <item name="android:editTextColor">@color/dark_grey</item>
+        <item name="android:textSize">13dp</item>
+    </style>
+    <style name="animation">
+        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
+    </style>
+</resources>

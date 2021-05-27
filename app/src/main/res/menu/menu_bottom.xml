@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
+    <item
+        android:title=""
+        android:id="@+id/Dashboard"
+        android:icon="@drawable/ic_dashbo"
+        app:cnb_backgroundColor="?attr/colorOnPrimary"
+        app:cnb_iconColor = "?attr/colorPrimary"
+        app:cnb_textColor="?attr/colorPrimary"
+        
+        />
+
+    <item
+        android:title=""
+        android:id="@+id/Plane"
+        android:icon="@drawable/ic_airplane"
+        app:cnb_backgroundColor="?attr/colorOnPrimary"
+        app:cnb_iconColor = "?attr/colorPrimary"
+        app:cnb_textColor="?attr/colorPrimary"
+        />
+    <item
+        android:title=""
+        android:id="@+id/Flight"
+        android:icon="@drawable/ic_flight"
+        app:cnb_backgroundColor="?attr/colorOnPrimary"
+        app:cnb_iconColor = "?attr/colorPrimary"
+        app:cnb_textColor="?attr/colorPrimary"
+        />
+    <item
+        android:title=""
+        android:id="@+id/Reservation"
+        android:icon="@drawable/ic_baseline_recent_actors_24"
+        app:cnb_backgroundColor="?attr/colorOnPrimary"
+        app:cnb_iconColor = "?attr/colorPrimary"
+        app:cnb_textColor="?attr/colorPrimary"
+        />
+    <item
+        android:title=""
+        android:id="@+id/Visualization"
+        android:icon="@drawable/ic_airline_seat"
+        app:cnb_backgroundColor="?attr/colorOnPrimary"
+        app:cnb_iconColor = "?attr/colorPrimary"
+        app:cnb_textColor="?attr/colorPrimary"
+        />
+</menu>

@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SimpleAdminUI</string>
+    <string name="welcome_msg">Bienvenu sur SimpleAdminUI</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

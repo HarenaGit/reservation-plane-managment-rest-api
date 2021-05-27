@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="mg.ny.adminui">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AdminUI">
+        <activity android:name=".view_logics.reservation_view.activity.SearchReservationActivity"></activity>
+        <activity android:name=".view_logics.reservation_view.activity.EditReservationActivity" />
+        <activity android:name=".view_logics.reservation_view.activity.AddReservationActivity" />
+        <activity android:name=".view_logics.flight_view.activity.EditFlightActivity" />
+        <activity android:name=".view_logics.flight_view.activity.AddFlightActivity" />
+        <activity android:name=".view_logics.flight_view.activity.MainActivity" />
+        <activity android:name=".view_logics.flight_view.activity.SearchFlightActivity" />
+        <activity android:name=".view_logics.plane_view.activity.AddplaneActivity" />
+        <activity android:name=".view_logics.plane_view.activity.EditplaneActivity" />
+        <activity android:name=".view_logics.plane_view.activity.SearchActivity" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
+
+</manifest>
