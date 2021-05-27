@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,12 +27,9 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import java.util.ArrayList;
 
 import mg.ny.adminui.R;
-import mg.ny.adminui.data_model.FlightDataModel;
 import mg.ny.adminui.view_logics.RequestCode;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
-import mg.ny.adminui.view_logics.flight_view.activity.EditFlightActivity;
-import mg.ny.adminui.view_logics.plane_view.activity.AddplaneActivity;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.ItemViewHolder;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListAdapter;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
@@ -82,7 +78,7 @@ public class  ReservationFragment extends Fragment {
     private StaticHorizentalListAdapter horizentalListAdapter;
     private LayoutInflater inflater;
     private ViewGroup container;
-    private PlaneDataModel currentPlaneData;
+    private AvionDataModel currentPlaneData;
     private View planeDetail;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -250,16 +246,16 @@ public class  ReservationFragment extends Fragment {
         if(resultCode == Activity.RESULT_CANCELED) return;
         switch (resultCode){
             case RequestCode.REQUEST_CODE_ADD_PLANE:
-                PlaneDataModel pl = (PlaneDataModel) d.getParcelableExtra("data");
+                AvionDataModel pl = (AvionDataModel) d.getParcelableExtra("data");
                 if(currentPosition != null && currentPosition == 0) horizentalListAdapter.setRow_index(1);
                 horizentalListAdapter.notifyDataSetChanged();
                 numberOfItem.setText(String.valueOf(item.size()));
                 Toast.makeText(context, "Avion ajouter avec succés", 1000).show();
                 break;
             case RequestCode.REQUEST_CODE_EDIT_PLANE:
-                PlaneDataModel currentD = (PlaneDataModel) d.getParcelableExtra("data");
+                AvionDataModel currentD = (AvionDataModel) d.getParcelableExtra("data");
                 horizentalListAdapter.notifyDataSetChanged();
-                int p = getPlaneDataPosition(currentD.getId());
+                int p = getPlaneDataPosition(currentD.getNum_avion());
                 if(currentPosition != null && currentPosition == p){
                     currentPlaneData = currentD;
 
@@ -269,8 +265,8 @@ public class  ReservationFragment extends Fragment {
                 Toast.makeText(context, "Données modifier avec succés", 1000).show();
                 break;
             case RequestCode.REQUEST_CODE_REMOVE_PLANE:
-                PlaneDataModel rmData = (PlaneDataModel) d.getParcelableExtra("data");
-                int pos = getPlaneDataPosition(rmData.getId());
+                AvionDataModel rmData = (AvionDataModel) d.getParcelableExtra("data");
+                int pos = getPlaneDataPosition(rmData.getNum_avion());
                 removeItemCallBack.removeItem(pos);
                 numberOfItem.setText(String.valueOf(item.size()));
                 if(currentPosition == null){

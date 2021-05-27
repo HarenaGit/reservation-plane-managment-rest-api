@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mg.ny.adminui.R;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 
-public class PlaneListAdapter extends ArrayAdapter<PlaneDataModel> {
+public class PlaneListAdapter extends ArrayAdapter<AvionDataModel> {
 
-    private List<PlaneDataModel> plane;
+    private List<AvionDataModel> plane;
     private Filter filter;
 
-    public PlaneListAdapter(Context context, ArrayList<PlaneDataModel> plane){
+    public PlaneListAdapter(Context context, ArrayList<AvionDataModel> plane){
         super(context, 0, plane);
         this.plane = plane;
     }
@@ -27,7 +27,7 @@ public class PlaneListAdapter extends ArrayAdapter<PlaneDataModel> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        PlaneDataModel p = getItem(position);
+        AvionDataModel p = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_search_plane, parent, false);
@@ -37,9 +37,9 @@ public class PlaneListAdapter extends ArrayAdapter<PlaneDataModel> {
         TextView id = (TextView) convertView.findViewById(R.id.planeIdSearch);
         TextView placeCount = (TextView) convertView.findViewById(R.id.planePlaceCountSearch);
 
-        name.setText(p.getName());
-        id.setText(p.getId());
-        placeCount.setText("Nombres de place : " + p.getPlaneSize());
+        name.setText(p.getType());
+        id.setText(p.getNum_avion());
+        placeCount.setText("Nombres de place : " + p.getNb_places());
 
         return convertView;
     }
@@ -47,16 +47,16 @@ public class PlaneListAdapter extends ArrayAdapter<PlaneDataModel> {
     @Override
     public Filter getFilter() {
         if (filter == null)
-            filter = new AppFilter<PlaneDataModel>(plane);
+            filter = new AppFilter<AvionDataModel>(plane);
         return filter;
     }
 
     private class AppFilter<T> extends Filter {
 
-        private ArrayList<PlaneDataModel> sourceObjects;
+        private ArrayList<AvionDataModel> sourceObjects;
 
-        public AppFilter(List<PlaneDataModel> objects) {
-            sourceObjects = new ArrayList<PlaneDataModel>();
+        public AppFilter(List<AvionDataModel> objects) {
+            sourceObjects = new ArrayList<AvionDataModel>();
             synchronized (this) {
                 sourceObjects.addAll(objects);
             }
@@ -67,10 +67,10 @@ public class PlaneListAdapter extends ArrayAdapter<PlaneDataModel> {
             String filterSeq = chars.toString().toLowerCase();
             FilterResults result = new FilterResults();
             if (filterSeq != null && filterSeq.length() > 0) {
-                ArrayList<PlaneDataModel> filter = new ArrayList<PlaneDataModel>();
+                ArrayList<AvionDataModel> filter = new ArrayList<AvionDataModel>();
 
-                for (PlaneDataModel object : sourceObjects) {
-                    if(object.getId().toLowerCase().contains(filterSeq) || object.getName().toLowerCase().contains(filterSeq) || object.getPlaneSize().toLowerCase().contains(filterSeq))
+                for (AvionDataModel object : sourceObjects) {
+                    if(object.getNum_avion().toLowerCase().contains(filterSeq) || object.getType().toLowerCase().contains(filterSeq) || object.getNb_places().toLowerCase().contains(filterSeq))
                        filter.add(object);
                 }
                 result.count = filter.size();
@@ -93,7 +93,7 @@ public class PlaneListAdapter extends ArrayAdapter<PlaneDataModel> {
             notifyDataSetChanged();
             clear();
             for (int i = 0, l = filtered.size(); i < l; i++)
-                add((PlaneDataModel) filtered.get(i));
+                add((AvionDataModel) filtered.get(i));
             notifyDataSetInvalidated();
         }
     }

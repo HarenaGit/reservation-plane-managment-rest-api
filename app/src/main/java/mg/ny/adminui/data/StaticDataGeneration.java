@@ -1,22 +1,21 @@
 package mg.ny.adminui.data;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import mg.ny.adminui.data_model.FlightDataModel;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
 
 public class  StaticDataGeneration {
-    public static ArrayList<PlaneDataModel> getPlaneData(){
-        ArrayList<PlaneDataModel> data = new ArrayList<>();
-        data.add(new PlaneDataModel("AV-0001", "Jet Privée", "56"));
-        data.add(new PlaneDataModel("AV-0002", "AIR261-45", "23"));
-        data.add(new PlaneDataModel("AV-0003", "Bus2", "14"));
-        data.add(new PlaneDataModel("AV-0004", "AIR265-85", "67"));
-        data.add(new PlaneDataModel("AV-0005", "AIR234-78", "45"));
-        data.add(new PlaneDataModel("AV-0006", "Jet Privée xoxo", "23"));
+    public static ArrayList<AvionDataModel> getPlaneData(){
+        ArrayList<AvionDataModel> data = new ArrayList<>();
+        data.add(new AvionDataModel("AV-0001", "Jet Privée", "56"));
+        data.add(new AvionDataModel("AV-0002", "AIR261-45", "23"));
+        data.add(new AvionDataModel("AV-0003", "Bus2", "14"));
+        data.add(new AvionDataModel("AV-0004", "AIR265-85", "67"));
+        data.add(new AvionDataModel("AV-0005", "AIR234-78", "45"));
+        data.add(new AvionDataModel("AV-0006", "Jet Privée xoxo", "23"));
 
         return data;
     }

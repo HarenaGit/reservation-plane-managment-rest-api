@@ -23,7 +23,7 @@ import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 
 import mg.ny.adminui.R;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.ItemViewHolder;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListAdapter;
@@ -73,7 +73,7 @@ public class  VisualisationFragment extends Fragment {
     private StaticHorizentalListAdapter horizentalListAdapter;
     private LayoutInflater inflater;
     private ViewGroup container;
-    private PlaneDataModel currentPlaneData;
+    private AvionDataModel currentPlaneData;
     private View planeDetail;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

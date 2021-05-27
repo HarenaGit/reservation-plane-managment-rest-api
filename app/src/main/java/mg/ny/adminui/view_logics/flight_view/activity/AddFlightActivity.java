@@ -31,7 +31,7 @@ import mg.ny.adminui.R;
 import mg.ny.adminui.view_logics.RequestCode;
 import mg.ny.adminui.data.StaticDataGeneration;
 import mg.ny.adminui.data_model.FlightDataModel;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.view_logics.flight_view.adapter.spinner_adapter.CustomSpinnerAdapter;
 
 public class AddFlightActivity extends AppCompatActivity {
@@ -48,7 +48,7 @@ public class AddFlightActivity extends AppCompatActivity {
     int planePosition;
     private RelativeLayout loading;
     private InputMethodManager imm;
-    private ArrayList<PlaneDataModel> planeList;
+    private ArrayList<AvionDataModel> planeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +112,7 @@ public class AddFlightActivity extends AppCompatActivity {
                     public void run() {
 
                         Intent intent=new Intent();
-                        intent.putExtra("data", new FlightDataModel(numVol.getText().toString(), planeList.get(planePosition).getName(), planeList.get(planePosition).getId(), cost.getText().toString(), depCity.getText().toString(), arvCity.getText().toString(), dateTimeDepDate.getText().toString(), dateTimeArvDate.getText().toString()));
+                        intent.putExtra("data", new FlightDataModel(numVol.getText().toString(), planeList.get(planePosition).getType(), planeList.get(planePosition).getNum_avion(), cost.getText().toString(), depCity.getText().toString(), arvCity.getText().toString(), dateTimeDepDate.getText().toString(), dateTimeArvDate.getText().toString()));
                         setResult(RequestCode.REQUEST_CODE_ADD_FLIGHT,intent);
                         finish();
                     }

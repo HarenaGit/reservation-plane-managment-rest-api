@@ -31,7 +31,7 @@ import mg.ny.adminui.R;
 import mg.ny.adminui.view_logics.RequestCode;
 import mg.ny.adminui.data.StaticDataGeneration;
 import mg.ny.adminui.data_model.FlightDataModel;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.view_logics.flight_view.adapter.spinner_adapter.CustomSpinnerAdapter;
 
 public class EditFlightActivity extends AppCompatActivity {
@@ -48,7 +48,7 @@ public class EditFlightActivity extends AppCompatActivity {
     int planePosition;
     private RelativeLayout loading;
     private InputMethodManager imm;
-    private ArrayList<PlaneDataModel> planeList;
+    private ArrayList<AvionDataModel> planeList;
     private FlightDataModel currentFlightData;
 
     @Override
@@ -131,7 +131,7 @@ public class EditFlightActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Intent intent=new Intent();
-                        intent.putExtra("data", new FlightDataModel(numVol.getText().toString(), planeList.get(planePosition).getName(), planeList.get(planePosition).getId(), cost.getText().toString(), depCity.getText().toString(), arvCity.getText().toString(), dateTimeDepDate.getText().toString(), dateTimeArvDate.getText().toString()));
+                        intent.putExtra("data", new FlightDataModel(numVol.getText().toString(), planeList.get(planePosition).getType(), planeList.get(planePosition).getNum_avion(), cost.getText().toString(), depCity.getText().toString(), arvCity.getText().toString(), dateTimeDepDate.getText().toString(), dateTimeArvDate.getText().toString()));
                         setResult(RequestCode.REQUEST_CODE_EDIT_FLIGHT,intent);
                         finish();
                     }
@@ -143,7 +143,7 @@ public class EditFlightActivity extends AppCompatActivity {
 
     private int getPlaneDataPosition(String id){
         for(int i=0; i<planeList.size();i++){
-            if(planeList.get(i).getId().equals(id)) return i;
+            if(planeList.get(i).getNum_avion().equals(id)) return i;
         }
         return -1;
     }

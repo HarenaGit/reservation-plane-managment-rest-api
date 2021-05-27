@@ -30,11 +30,8 @@ import java.util.Calendar;
 import mg.ny.adminui.R;
 import mg.ny.adminui.data.StaticDataGeneration;
 import mg.ny.adminui.data_model.FlightDataModel;
-import mg.ny.adminui.data_model.PlaneDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
 import mg.ny.adminui.view_logics.RequestCode;
-import mg.ny.adminui.view_logics.flight_view.activity.AddFlightActivity;
-import mg.ny.adminui.view_logics.flight_view.adapter.spinner_adapter.CustomSpinnerAdapter;
 import mg.ny.adminui.view_logics.reservation_view.adapter.spiner_adapter.NumPlaceSpinnerAdapter;
 import mg.ny.adminui.view_logics.reservation_view.adapter.spiner_adapter.NumVolSpinnerAdapter;
 

@@ -4,22 +4,21 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import mg.ny.adminui.R;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 
 
 public class CustomSpinnerAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<PlaneDataModel> items;
+    private ArrayList<AvionDataModel> items;
 
-    public CustomSpinnerAdapter(Context context, ArrayList<PlaneDataModel> items){
+    public CustomSpinnerAdapter(Context context, ArrayList<AvionDataModel> items){
        this.context = context;
        this.items = items;
 
@@ -47,7 +46,7 @@ public class CustomSpinnerAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false);
         }
         TextView text = convertView.findViewById(R.id.spinnerTextItem);
-        text.setText(items.get(position).getId() + "/" + items.get(position).getName());
+        text.setText(items.get(position).getNum_avion() + "/" + items.get(position).getType());
         return convertView;
     }
 }

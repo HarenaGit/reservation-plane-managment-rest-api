@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 
 import com.google.android.material.button.MaterialButton;
 
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.R;
 import mg.ny.adminui.view_logics.RequestCode;
 
@@ -48,7 +48,7 @@ public class AddplaneActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Intent intent=new Intent();
-                        intent.putExtra("data", new PlaneDataModel(id.getText().toString(), name.getText().toString(), place.getText().toString()));
+                        intent.putExtra("data", new AvionDataModel(id.getText().toString(), name.getText().toString(), place.getText().toString()));
                         setResult(RequestCode.REQUEST_CODE_ADD_PLANE,intent);
                         finish();
                     }

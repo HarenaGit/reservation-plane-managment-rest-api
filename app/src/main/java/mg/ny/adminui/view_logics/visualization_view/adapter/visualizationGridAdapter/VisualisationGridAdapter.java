@@ -1,24 +1,17 @@
 package mg.ny.adminui.view_logics.visualization_view.adapter.visualizationGridAdapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import mg.ny.adminui.R;
-import mg.ny.adminui.data_model.PlaneDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
 
 public class VisualisationGridAdapter extends ArrayAdapter<ReservationDataModel> {

@@ -31,12 +31,12 @@ import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHori
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
 import mg.ny.adminui.view_logics.plane_view.activity.AddplaneActivity;
 import mg.ny.adminui.view_logics.plane_view.activity.EditplaneActivity;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 
 public class  PlaneFragment extends Fragment {
 
    private ArrayList<StaticHorizentalListModel> item ;
-   private ArrayList<PlaneDataModel> data;
+   private ArrayList<AvionDataModel> data;
    private Integer currentPosition = null;
    private TextView currentId;
    private TextView currentName;
@@ -46,7 +46,7 @@ public class  PlaneFragment extends Fragment {
    private RemoveItemCallBack removeItemCallBack;
    private LinearLayout contentDialog;
    private RelativeLayout loadingDialog;
-    public PlaneFragment(ArrayList<StaticHorizentalListModel> item, ArrayList<PlaneDataModel> data, RemoveItemCallBack removeItemCallBack){
+    public PlaneFragment(ArrayList<StaticHorizentalListModel> item, ArrayList<AvionDataModel> data, RemoveItemCallBack removeItemCallBack){
         this.item = item;
         this.data = data;
         this.removeItemCallBack = removeItemCallBack;
@@ -74,7 +74,7 @@ public class  PlaneFragment extends Fragment {
     private StaticHorizentalListAdapter horizentalListAdapter;
     private LayoutInflater inflater;
     private ViewGroup container;
-    private PlaneDataModel currentPlaneData;
+    private AvionDataModel currentPlaneData;
     private View planeDetail;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,9 +128,9 @@ public class  PlaneFragment extends Fragment {
                     currentId = view.findViewById(R.id.planeId);
                     currentName = view.findViewById(R.id.planeName);
                     currentPlaceCount = view.findViewById(R.id.planePlaceCount);
-                    currentId.setText(currentPlaneData.getId());
-                    currentName.setText(currentPlaneData.getName());
-                    currentPlaceCount.setText(currentPlaneData.getPlaneSize());
+                    currentId.setText(currentPlaneData.getNum_avion());
+                    currentName.setText(currentPlaneData.getType());
+                    currentPlaceCount.setText(currentPlaneData.getNb_places());
 
                     return 0;
                 };
@@ -189,7 +189,7 @@ public class  PlaneFragment extends Fragment {
 
     private int getPlaneDataPosition(String id){
         for(int i=0; i<data.size();i++){
-            if(data.get(i).getId().equals(id)) return i;
+            if(data.get(i).getNum_avion().equals(id)) return i;
         }
         return -1;
     }
@@ -200,29 +200,29 @@ public class  PlaneFragment extends Fragment {
         if(resultCode == Activity.RESULT_CANCELED) return;
         switch (resultCode){
             case RequestCode.REQUEST_CODE_ADD_PLANE:
-                PlaneDataModel pl = (PlaneDataModel) d.getParcelableExtra("data");
+                AvionDataModel pl = (AvionDataModel) d.getParcelableExtra("data");
                 if(currentPosition != null && currentPosition == 0) horizentalListAdapter.setRow_index(1);
                 horizentalListAdapter.notifyDataSetChanged();
                 planeNumber.setText(String.valueOf(data.size()));
                 Toast.makeText(context, "Avion ajouter avec succés", 1000).show();
                 break;
             case RequestCode.REQUEST_CODE_EDIT_PLANE:
-                PlaneDataModel currentD = (PlaneDataModel) d.getParcelableExtra("data");
+                AvionDataModel currentD = (AvionDataModel) d.getParcelableExtra("data");
                 horizentalListAdapter.notifyDataSetChanged();
-                int p = getPlaneDataPosition(currentD.getId());
+                int p = getPlaneDataPosition(currentD.getNum_avion());
                 if(currentPosition != null && currentPosition == p){
                     currentPlaneData = currentD;
-                    currentId.setText(currentD.getId());
-                    currentName.setText(currentD.getName());
-                    currentPlaceCount.setText(currentD.getPlaneSize());
+                    currentId.setText(currentD.getNum_avion());
+                    currentName.setText(currentD.getType());
+                    currentPlaceCount.setText(currentD.getNb_places());
 
                 }
                 planeNumber.setText(String.valueOf(data.size()));
                 Toast.makeText(context, "Données modifier avec succés", 1000).show();
                 break;
             case RequestCode.REQUEST_CODE_REMOVE_PLANE:
-                PlaneDataModel rmData = (PlaneDataModel) d.getParcelableExtra("data");
-                int pos = getPlaneDataPosition(rmData.getId());
+                AvionDataModel rmData = (AvionDataModel) d.getParcelableExtra("data");
+                int pos = getPlaneDataPosition(rmData.getNum_avion());
                 removeItemCallBack.removeItem(pos);
                 planeNumber.setText(String.valueOf(data.size()));
                 if(currentPosition == null){

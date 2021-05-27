@@ -27,7 +27,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import java.util.ArrayList;
 
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.view_logics.plane_view.adapter.search_adapter.PlaneListAdapter;
 import mg.ny.adminui.R;
 import mg.ny.adminui.view_logics.RequestCode;
@@ -36,7 +36,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private SearchView searchView;
     private ImageButton backButton;
-    private ArrayList<PlaneDataModel> data;
+    private ArrayList<AvionDataModel> data;
     private PlaneListAdapter adapter;
     private SwipeMenuListView listView;
     private InputMethodManager imm;
@@ -112,7 +112,7 @@ public class SearchActivity extends AppCompatActivity {
                // loadingDialog.setVisibility(View.VISIBLE);
 
                         Intent intent = new Intent();
-                        PlaneDataModel currentPlaneData = data.get(p);
+                        AvionDataModel currentPlaneData = data.get(p);
                         intent.putExtra("data", currentPlaneData);
                         setResult(RequestCode.REQUEST_CODE_REMOVE_PLANE, intent);
                         finish();
@@ -133,14 +133,14 @@ public class SearchActivity extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         Intent editActivity = new Intent(getApplicationContext(), EditplaneActivity.class);
-                        PlaneDataModel currentPlaneData = data.get(position);
+                        AvionDataModel currentPlaneData = data.get(position);
                         editActivity.putExtra("data", currentPlaneData);
                         startActivityForResult(editActivity, RequestCode.REQUEST_CODE_EDIT_PLANE);
                         break;
                     case 1:
                         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                         TextView textDialog = dialog.findViewById(R.id.planeRemoveId);
-                        textDialog.setText("Avion numéro : " +  data.get(position).getId());
+                        textDialog.setText("Avion numéro : " +  data.get(position).getNum_avion());
                         dialog.show();
                         break;
                 }
@@ -182,7 +182,7 @@ public class SearchActivity extends AppCompatActivity {
         {
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             Intent intent = new Intent();
-            PlaneDataModel currentData = (PlaneDataModel) data.getParcelableExtra("data");
+            AvionDataModel currentData = (AvionDataModel) data.getParcelableExtra("data");
             intent.putExtra("data", currentData);
             setResult(RequestCode.REQUEST_CODE_EDIT_PLANE, intent);
             finish();

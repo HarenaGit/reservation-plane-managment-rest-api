@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import mg.ny.adminui.data.StaticDataGeneration;
 import mg.ny.adminui.data_model.FlightDataModel;
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
 import mg.ny.adminui.view_logics.RequestCode;
 import mg.ny.adminui.view_logics.dashboard_view.fragment.DashboardFragment;
@@ -46,7 +46,7 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
     private Fragment planeFragment;
     private ProgressBar progressBar;
     private ImageButton searchButton;
-    private ArrayList<PlaneDataModel> planeData;
+    private ArrayList<AvionDataModel> planeData;
     private ArrayList<StaticHorizentalListModel> planeItem;
     private ArrayList<FlightDataModel> flightData;
     private ArrayList<StaticHorizentalListModel> flightItem;
@@ -206,16 +206,16 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
         if(resultCode == Activity.RESULT_CANCELED) return;
         switch (resultCode){
             case RequestCode.REQUEST_CODE_ADD_PLANE:
-                PlaneDataModel currentPlaneData = (PlaneDataModel) data.getParcelableExtra("data");
+                AvionDataModel currentPlaneData = (AvionDataModel) data.getParcelableExtra("data");
                 addPlaneData(currentPlaneData);
-                addPlaneItem(currentPlaneData.getName());
+                addPlaneItem(currentPlaneData.getType());
                 break;
             case RequestCode.REQUEST_CODE_EDIT_PLANE:
-                PlaneDataModel currentData = (PlaneDataModel) data.getParcelableExtra("data");
-                int currentPosition = getPlaneDataPosition(currentData.getId());
+                AvionDataModel currentData = (AvionDataModel) data.getParcelableExtra("data");
+                int currentPosition = getPlaneDataPosition(currentData.getNum_avion());
                 if(currentPosition>=0){
                     setPlaneData(currentPosition, currentData);
-                    setPlaneItem(currentPosition, new StaticHorizentalListModel(currentData.getName()));
+                    setPlaneItem(currentPosition, new StaticHorizentalListModel(currentData.getType()));
                 }
                 break;
             case RequestCode.REQUEST_CODE_ADD_FLIGHT:
@@ -239,13 +239,13 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void addPlaneData(PlaneDataModel o){
+    private void addPlaneData(AvionDataModel o){
         planeData.add(0, o);
     }
     private void addPlaneItem(String text){
         planeItem.add(0, new StaticHorizentalListModel(text));
     }
-    private void setPlaneData(int position, PlaneDataModel o){
+    private void setPlaneData(int position, AvionDataModel o){
         planeData.set(position, o);
     }
     private void setPlaneItem(int position, StaticHorizentalListModel o){
@@ -253,11 +253,11 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
     }
     private int getPlaneDataPosition(String id){
         for(int i=0; i<planeData.size();i++){
-            if(planeData.get(i).getId().equals(id)) return i;
+            if(planeData.get(i).getNum_avion().equals(id)) return i;
         }
         return -1;
     }
-    private ArrayList<PlaneDataModel>  planeData(){
+    private ArrayList<AvionDataModel>  planeData(){
         return StaticDataGeneration.getPlaneData();
     }
     private ArrayList<StaticHorizentalListModel> planeItem(){

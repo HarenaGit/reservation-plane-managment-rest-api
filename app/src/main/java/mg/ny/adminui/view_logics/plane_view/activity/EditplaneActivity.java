@@ -16,13 +16,13 @@ import android.widget.RelativeLayout;
 
 import com.google.android.material.button.MaterialButton;
 
-import mg.ny.adminui.data_model.PlaneDataModel;
+import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.R;
 import mg.ny.adminui.view_logics.RequestCode;
 
 public class EditplaneActivity extends AppCompatActivity {
 
-    private PlaneDataModel data;
+    private AvionDataModel data;
     private ImageButton backButton;
     private EditText id;
     private EditText name;
@@ -33,23 +33,23 @@ public class EditplaneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editplane);
-        data = (PlaneDataModel) getIntent().getParcelableExtra("data");
+        data = (AvionDataModel) getIntent().getParcelableExtra("data");
         backButton = findViewById(R.id.backButtonEdit);
         id = findViewById(R.id.editPlaneNumber);
         name = findViewById(R.id.editPlaneName);
         placeCount = findViewById(R.id.editPlacePlane);
 
-        id.setText(data.getId());
+        id.setText(data.getNum_avion());
         id.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                id.setText(data.getId());
+                id.setText(data.getNum_avion());
                 return false;
             }
         });
-        name.setText(data.getName());
+        name.setText(data.getType());
         name.requestFocus();
-        placeCount.setText(data.getPlaneSize());
+        placeCount.setText(data.getNb_places());
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +71,7 @@ public class EditplaneActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Intent intent = new Intent();
-                        intent.putExtra("data", new PlaneDataModel(id.getText().toString(), name.getText().toString(), placeCount.getText().toString()));
+                        intent.putExtra("data", new AvionDataModel(id.getText().toString(), name.getText().toString(), placeCount.getText().toString()));
                         setResult(RequestCode.REQUEST_CODE_EDIT_PLANE, intent);
                         finish();
                     }
