@@ -3,78 +3,104 @@ package mg.ny.adminui.data_model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class FlightDataModel implements Parcelable{
-    private String id;
-    private String plane;
-    private String planeId;
-    private String cost;
-    private String departureCity;
-    private String arrivalCity;
-    private String departureDate;
-    private String arrivalDate;
+    private Integer num_vol;
+    private String type;
+    private Integer num_avion;
+    private Double frais;
+    private String ville_depart;
+    private String ville_arrivee;
+    private String heure_depart;
+    private String heure_arrivee;
+    private Integer nb_places;
+    private Integer nb_colonnes;
 
-    public String getId() {
-        return id;
+    public Integer getNum_vol() {
+        return num_vol;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNum_vol(Integer num_vol) {
+        this.num_vol = num_vol;
     }
 
-    public String getPlane() {
-        return plane;
+    public String getType() {
+        if(type == null) return "";
+        return type;
     }
 
-    public void setPlane(String plane) {
-        this.plane = plane;
+    public Integer getNb_places(){
+        return this.nb_places;
+    }
+    public Integer getNb_colonnes(){
+        return this.nb_colonnes;
     }
 
-    public String getPlaneId() {
-        return planeId;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setPlaneId(String planeId) {
-        this.planeId = planeId;
+    public Integer getNum_avion() {
+        return num_avion;
     }
 
-    public String getCost() {
-        return cost;
+    public void setNum_avion(Integer num_avion) {
+        this.num_avion = num_avion;
     }
 
-    public void setCost(String cost) {
-        this.cost = cost;
+    public Double getFrais() {
+        return frais;
     }
 
-    public String getDepartureCity() {
-        return departureCity;
+    public void setFrais(Double frais) {
+        this.frais = frais;
     }
 
-    public void setDepartureCity(String departureCity) {
-        this.departureCity = departureCity;
+    public String getVille_depart() {
+        return ville_depart;
     }
 
-    public String getArrivalCity() {
-        return arrivalCity;
+    public void setVille_depart(String ville_depart) {
+        this.ville_depart = ville_depart;
     }
 
-    public void setArrivalCity(String arrivalCity) {
-        this.arrivalCity = arrivalCity;
+    public String getVille_arrivee() {
+        return ville_arrivee;
     }
 
-    public String getDepartureDate() {
-        return departureDate;
+    public void setVille_arrivee(String ville_arrivee) {
+        this.ville_arrivee = ville_arrivee;
     }
 
-    public void setDepartureDate(String departureDate) {
-        this.departureDate = departureDate;
+    public String getHeure_depart() {
+        return formatDate(heure_depart);
     }
 
-    public String getArrivalDate() {
-        return arrivalDate;
+    public String formatDate(String d){
+        SimpleDateFormat enterFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = enterFormat.parse(d);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            return d;
+        }
     }
 
-    public void setArrivalDate(String arrivalDate) {
-        this.arrivalDate = arrivalDate;
+    public void setHeure_depart(String heure_depart) {
+        this.heure_depart = heure_depart;
+    }
+
+    public String getHeure_arrivee() {
+        return formatDate(heure_arrivee);
+    }
+
+    public void setHeure_arrivee(String heure_arrivee) {
+        this.heure_arrivee = heure_arrivee;
     }
 
     @Override
@@ -84,35 +110,48 @@ public class FlightDataModel implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(plane);
-        dest.writeString(planeId);
-        dest.writeString(cost);
-        dest.writeString(departureCity);
-        dest.writeString(arrivalCity);
-        dest.writeString(departureDate);
-        dest.writeString(arrivalDate);
-
+        dest.writeInt(num_vol);
+        dest.writeString(type);
+        dest.writeInt(num_avion);
+        dest.writeDouble(frais);
+        dest.writeString(ville_depart);
+        dest.writeString(ville_arrivee);
+        dest.writeString(heure_depart);
+        dest.writeString(heure_arrivee);
+        dest.writeInt(nb_places);
+        dest.writeInt(nb_colonnes);
     }
-    public FlightDataModel(String id, String plane, String planeId, String cost, String departureCity, String arrivalCity, String departureDate, String arrivalDate) {
-        this.id = id;
-        this.plane = plane;
-        this.planeId = planeId;
-        this.cost = cost;
-        this.departureCity = departureCity;
-        this.arrivalCity = arrivalCity;
-        this.departureDate = departureDate;
-        this.arrivalDate = arrivalDate;
+    public FlightDataModel(Integer num_vol, Integer num_avion, Double frais, String ville_depart, String ville_arrivee, String heure_depart, String heure_arrivee) {
+        this.num_vol = num_vol;
+        this.type = "";
+        this.num_avion = num_avion;
+        this.frais = frais;
+        this.ville_depart = ville_depart;
+        this.ville_arrivee = ville_arrivee;
+        this.heure_depart = heure_depart;
+        this.heure_arrivee = heure_arrivee;
+    }
+    public FlightDataModel(Integer num_vol, String type, Integer num_avion, Double frais, String ville_depart, String ville_arrivee, String heure_depart, String heure_arrivee) {
+        this.num_vol = num_vol;
+        this.type = type;
+        this.num_avion = num_avion;
+        this.frais = frais;
+        this.ville_depart = ville_depart;
+        this.ville_arrivee = ville_arrivee;
+        this.heure_depart = heure_depart;
+        this.heure_arrivee = heure_arrivee;
     }
     public FlightDataModel(Parcel source){
-        id = source.readString();
-        plane = source.readString();
-        planeId = source.readString();
-        cost = source.readString();
-        departureCity = source.readString();
-        arrivalCity = source.readString();
-        departureDate = source.readString();
-        arrivalDate = source.readString();
+        num_vol = source.readInt();
+        type = source.readString();
+        num_avion = source.readInt();
+        frais = source.readDouble();
+        ville_depart = source.readString();
+        ville_arrivee = source.readString();
+        heure_depart = source.readString();
+        heure_arrivee = source.readString();
+        nb_places = source.readInt();
+        nb_colonnes = source.readInt();
     }
     public static final Creator<FlightDataModel> CREATOR = new Creator<FlightDataModel>() {
         @Override

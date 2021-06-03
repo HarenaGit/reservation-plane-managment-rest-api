@@ -25,6 +25,11 @@ public class ReservationAdapter extends ArrayAdapter<ReservationDataModel> {
         this.reservation =reservation;
     }
 
+    public ReservationDataModel getElement(int p){
+        return  this.reservation.get(p);
+    }
+
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -39,14 +44,14 @@ public class ReservationAdapter extends ArrayAdapter<ReservationDataModel> {
         TextView detail = (TextView) convertView.findViewById(R.id.reservationDetail);
         ImageView container = (ImageView) convertView.findViewById(R.id.reservationContainer);
 
-        id.setText(p.getId());
-        place.setText(p.getPlaceNumber());
+        id.setText(p.getNum_reservation());
+        place.setText(p.getNum_place());
        container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(detail.getText().equals("")) {
-                    detail.setText("Reservé par : " + p.getPassengerName() + " le " + p.getReservationDate());
+                    detail.setText("Reservé par : " + p.getNom_voayageur() + " le " + p.getDate_reservation());
                     container.setImageResource(R.drawable.ic_arrow_up);
                 }
                 else {

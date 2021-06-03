@@ -21,14 +21,20 @@ public class FlightListAdapter extends ArrayAdapter<FlightDataModel> {
 private List<FlightDataModel> flight;
 private Filter filter;
 
+
+
 public FlightListAdapter(Context context, ArrayList<FlightDataModel> flight){
         super(context, 0, flight);
         this.flight = flight;
         }
 
-private String detailText(String departureDate, String arrivalDate, String departureCity, String arrivalCity, String cost){
+private String detailText(String departureDate, String arrivalDate, String departureCity, String arrivalCity, Double cost){
     String txt = "Heure de départ : " + departureDate + "; heure d'arrivée : " + arrivalDate + "; Ville de départ : " + departureCity + "; Ville d'arrivée : " + arrivalCity + "; Frais : " + cost ;
     return txt;
+}
+
+public FlightDataModel getElement(int p){
+    return flight.get(p);
 }
 
 @Override
@@ -44,9 +50,9 @@ public View getView(int position, View convertView, ViewGroup parent) {
         TextView id = (TextView) convertView.findViewById(R.id.flightIdSearch);
         TextView detailSearch = (TextView) convertView.findViewById(R.id.detailFlightSearch);
 
-        plane.setText(p.getPlane());
-        id.setText(p.getId());
-        detailSearch.setText(detailText(p.getDepartureDate(), p.getArrivalDate(), p.getDepartureCity(), p.getArrivalCity(), p.getCost()));
+        plane.setText(p.getType());
+        id.setText(p.getNum_vol());
+        detailSearch.setText(detailText(p.getHeure_depart(), p.getHeure_arrivee(), p.getVille_depart(), p.getVille_arrivee(), p.getFrais()));
 
         return convertView;
         }
@@ -77,7 +83,7 @@ private class AppFilter<T> extends Filter {
             ArrayList<FlightDataModel> filter = new ArrayList<FlightDataModel>();
 
             for (FlightDataModel object : sourceObjects) {
-                if(object.getId().toLowerCase().contains(filterSeq) || object.getPlane().toLowerCase().contains(filterSeq) || object.getCost().toLowerCase().contains(filterSeq) || object.getDepartureCity().toLowerCase().contains(filterSeq) || object.getArrivalCity().toLowerCase().contains(filterSeq) ||  object.getDepartureDate().toLowerCase().contains(filterSeq) ||  object.getArrivalDate().toLowerCase().contains(filterSeq) )
+                if(String.valueOf(object.getNum_vol()).toLowerCase().contains(filterSeq) || String.valueOf(object.getType()).toLowerCase().contains(filterSeq) || String.valueOf(object.getFrais()).toLowerCase().contains(filterSeq) || object.getVille_depart().toLowerCase().contains(filterSeq) || object.getVille_arrivee().toLowerCase().contains(filterSeq) ||  object.getHeure_depart().toLowerCase().contains(filterSeq) ||  object.getHeure_arrivee().toLowerCase().contains(filterSeq) )
                     filter.add(object);
             }
             result.count = filter.size();

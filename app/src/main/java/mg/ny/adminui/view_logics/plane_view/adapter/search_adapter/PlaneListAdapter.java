@@ -24,6 +24,11 @@ public class PlaneListAdapter extends ArrayAdapter<AvionDataModel> {
         this.plane = plane;
     }
 
+
+    public AvionDataModel getElement(int p){
+       return plane.get(p);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -37,9 +42,9 @@ public class PlaneListAdapter extends ArrayAdapter<AvionDataModel> {
         TextView id = (TextView) convertView.findViewById(R.id.planeIdSearch);
         TextView placeCount = (TextView) convertView.findViewById(R.id.planePlaceCountSearch);
 
-        name.setText(p.getType());
-        id.setText(p.getNum_avion());
-        placeCount.setText("Nombres de place : " + p.getNb_places());
+        name.setText(String.valueOf(p.getType()));
+        id.setText(String.valueOf(p.getNum_avion()));
+        placeCount.setText("Places / Colonnes : " + String.valueOf(p.getNb_places()) + " / " + String.valueOf(p.getNb_colonnes()));
 
         return convertView;
     }
@@ -70,7 +75,7 @@ public class PlaneListAdapter extends ArrayAdapter<AvionDataModel> {
                 ArrayList<AvionDataModel> filter = new ArrayList<AvionDataModel>();
 
                 for (AvionDataModel object : sourceObjects) {
-                    if(object.getNum_avion().toLowerCase().contains(filterSeq) || object.getType().toLowerCase().contains(filterSeq) || object.getNb_places().toLowerCase().contains(filterSeq))
+                    if(String.valueOf(object.getNum_avion()).contains(filterSeq) || object.getType().toLowerCase().contains(filterSeq) || String.valueOf(object.getNb_places()).contains(filterSeq) || String.valueOf(object.getNb_colonnes()).equals(filterSeq))
                        filter.add(object);
                 }
                 result.count = filter.size();

@@ -82,76 +82,6 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:orientation="horizontal"
-
-                                >
-                                <RelativeLayout
-                                    android:layout_width="20dp"
-                                    android:layout_height="50dp"
-                                    >
-
-                                    <ImageView
-                                        android:layout_width="25dp"
-                                        android:layout_height="25dp"
-                                        android:background="@android:color/transparent"
-                                        android:src="@drawable/ic_data_usage"
-                                        android:tint="@color/blue"
-                                        />
-                                </RelativeLayout>
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginRight="20dp"
-                                    >
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:layout_marginLeft="15dp"
-                                        android:orientation="vertical"
-                                        >
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Numéro"
-                                            android:letterSpacing="0.05"
-                                            android:textColor="@color/black"
-                                            android:textSize="15dp"
-                                            android:fontFamily="@font/opensans_semibold"
-                                            android:layout_marginBottom="5dp"
-                                            />
-                                        <EditText
-                                            android:layout_height="35dp"
-                                            android:layout_width="match_parent"
-                                            android:hint="..."
-                                            android:fontFamily="@font/segeo_ui"
-                                            android:textSize="14dp"
-                                            android:textColor="@color/dark_grey"
-                                            android:background="@drawable/edit_text_background"
-                                            android:id="@+id/addPlaneNumber"
-                                            />
-                                    </LinearLayout>
-
-                                </RelativeLayout>
-
-                            </LinearLayout>
-                        </RelativeLayout>
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="65dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="20dp"
-                        >
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_centerVertical="true"
-                            >
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
                                 android:orientation="horizontal">
                                 <RelativeLayout
                                     android:layout_width="20dp"
@@ -170,34 +100,34 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginRight="20dp"
                                     >
+
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
                                         android:layout_marginLeft="15dp"
-                                        android:orientation="vertical"
-                                        >
+                                        android:orientation="vertical">
+
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Nom"
-                                            android:letterSpacing="0.05"
-                                            android:textColor="@color/black"
-                                            android:textSize="15dp"
-                                            android:fontFamily="@font/opensans_semibold"
                                             android:layout_marginBottom="5dp"
-                                            />
+                                            android:fontFamily="@font/opensans_semibold"
+                                            android:letterSpacing="0.05"
+                                            android:text="Nom"
+                                            android:textColor="@color/black"
+                                            android:textSize="15dp" />
+
                                         <EditText
-                                            android:layout_height="35dp"
-                                            android:layout_width="match_parent"
-                                            android:hint="..."
-                                            android:fontFamily="@font/segeo_ui"
-                                            android:textSize="14dp"
-                                            android:focusedByDefault="true"
-                                            android:focusable="true"
-                                            android:textColor="@color/dark_grey"
-                                            android:background="@drawable/edit_text_background"
                                             android:id="@+id/addPlaneName"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="35dp"
+                                            android:background="@drawable/edit_text_background"
+                                            android:focusable="true"
+                                            android:focusedByDefault="true"
+                                            android:fontFamily="@font/segeo_ui"
+                                            android:hint="..."
+                                            android:textColor="@color/dark_grey"
+                                            android:textSize="14dp"
 
                                             />
                                     </LinearLayout>
@@ -267,6 +197,77 @@
                                             android:textColor="@color/dark_grey"
                                             android:background="@drawable/edit_text_background"
                                             android:id="@+id/addPlacePlane"
+
+                                            />
+                                    </LinearLayout>
+
+                                </RelativeLayout>
+
+                            </LinearLayout>
+                        </RelativeLayout>
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="65dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        >
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+                                <RelativeLayout
+                                    android:layout_width="20dp"
+                                    android:layout_height="50dp"
+                                    >
+
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:background="@android:color/transparent"
+                                        android:src="@drawable/ic_data_usage"
+                                        android:tint="@color/red" />
+                                </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="20dp"
+                                    >
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="15dp"
+                                        android:orientation="vertical"
+                                        >
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Nombres de colonnes"
+                                            android:letterSpacing="0.05"
+                                            android:textColor="@color/black"
+                                            android:textSize="15dp"
+                                            android:fontFamily="@font/opensans_semibold"
+                                            android:layout_marginBottom="5dp"
+                                            />
+                                        <EditText
+
+                                            android:layout_height="35dp"
+                                            android:layout_width="match_parent"
+                                            android:hint="..."
+                                            android:fontFamily="@font/segeo_ui"
+                                            android:textSize="14dp"
+                                            android:inputType="number"
+                                            android:textColor="@color/dark_grey"
+                                            android:background="@drawable/edit_text_background"
+                                            android:id="@+id/addColonnePlane"
+
                                             />
                                     </LinearLayout>
 

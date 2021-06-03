@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,19 +17,20 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             >
+
             <TextView
+                android:id="@+id/reservationPlane"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:fontFamily="@font/segeo_ui"
                 android:text="Liste des réservations"
                 android:textColor="@color/light_grey"
-                android:textSize="10dp"
-                android:fontFamily="@font/segeo_ui"
-                android:layout_alignParentLeft="true"
-                android:id="@+id/reservationPlane"
-                />
+                android:textSize="10dp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/numberReservation"
                 android:text="Nombres : "
                 android:textColor="@color/light_grey"
                 android:textSize="10dp"
@@ -35,21 +38,41 @@
                 android:layout_alignParentRight="true"
                 />
         </RelativeLayout>
-        <com.baoyz.swipemenulistview.SwipeMenuListView
-            android:id="@+id/reservationListItem"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarThumbVertical="@null"
-            android:scrollbarThumbHorizontal="@null"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="50dp"
-            android:background="@color/backgroundColor"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            >
+            android:layout_marginTop="50dp">
+            <com.baoyz.swipemenulistview.SwipeMenuListView
+                android:id="@+id/reservationListItem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarThumbVertical="@null"
+                android:scrollbarThumbHorizontal="@null"
+                android:background="@color/backgroundColor"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                >
 
-        </com.baoyz.swipemenulistview.SwipeMenuListView>
+            </com.baoyz.swipemenulistview.SwipeMenuListView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:id="@+id/loadingReservation"
+                >
+                <com.github.ybq.android.spinkit.SpinKitView
+                    style="@style/SpinKitView.Small.FadingCircle"
+                    android:id="@+id/smallLoader"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    app:SpinKit_Color="@color/blue"
+                     />
+            </RelativeLayout>
+        </RelativeLayout>
+
     </RelativeLayout>
 </RelativeLayout>
 

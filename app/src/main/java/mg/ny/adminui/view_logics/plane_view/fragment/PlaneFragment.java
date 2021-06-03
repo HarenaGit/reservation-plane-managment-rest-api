@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,15 +24,21 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
+import mg.ny.adminui.ApiCallConfig;
+import mg.ny.adminui.apiCall.Avion;
+import mg.ny.adminui.view_logics.plane_view.activity.SearchActivity;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.HorizentalListCallBack;
 import mg.ny.adminui.R;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.RemoveItemCallBack;
 import mg.ny.adminui.view_logics.RequestCode;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListAdapter;
-import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
+import mg.ny.adminui.data_model.StaticHorizentalListModel;
 import mg.ny.adminui.view_logics.plane_view.activity.AddplaneActivity;
 import mg.ny.adminui.view_logics.plane_view.activity.EditplaneActivity;
 import mg.ny.adminui.data_model.AvionDataModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class  PlaneFragment extends Fragment {
 
@@ -41,11 +48,14 @@ public class  PlaneFragment extends Fragment {
    private TextView currentId;
    private TextView currentName;
    private TextView currentPlaceCount;
+   private TextView currentColumnCount;
    private TextView planeNumber;
    private Dialog dialog;
    private RemoveItemCallBack removeItemCallBack;
    private LinearLayout contentDialog;
    private RelativeLayout loadingDialog;
+   private DeleteAvion deleteAvion;
+   private Call<Void> call;
     public PlaneFragment(ArrayList<StaticHorizentalListModel> item, ArrayList<AvionDataModel> data, RemoveItemCallBack removeItemCallBack){
         this.item = item;
         this.data = data;
@@ -128,10 +138,11 @@ public class  PlaneFragment extends Fragment {
                     currentId = view.findViewById(R.id.planeId);
                     currentName = view.findViewById(R.id.planeName);
                     currentPlaceCount = view.findViewById(R.id.planePlaceCount);
-                    currentId.setText(currentPlaneData.getNum_avion());
+                    currentColumnCount = view.findViewById(R.id.planeColumCount);
+                    currentId.setText(String.valueOf(currentPlaneData.getNum_avion()));
                     currentName.setText(currentPlaneData.getType());
-                    currentPlaceCount.setText(currentPlaneData.getNb_places());
-
+                    currentPlaceCount.setText(String.valueOf(currentPlaneData.getNb_places()));
+                    currentColumnCount.setText(String.valueOf(currentPlaneData.getNb_colonnes()));
                     return 0;
                 };
                 recyclerView.setLayoutManager(new LinearLayoutManager( view.getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -151,23 +162,9 @@ public class  PlaneFragment extends Fragment {
                 yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                      contentDialog.setVisibility(View.GONE);
-                      loadingDialog.setVisibility(View.VISIBLE);
-                      new Handler().postDelayed(new Runnable() {
-                          @Override
-                          public void run() {
-                              removeItemCallBack.removeItem(currentPosition);
-                              planeNumber.setText(String.valueOf(data.size()));
-                              horizentalListAdapter.setIsFirstClicked(true);
-                              horizentalListAdapter.setRow_index(-1);
-                              horizentalListAdapter.notifyDataSetChanged();
-                              planeContent.removeView(planed);
-                              planeContent.addView(selectionIcon);
-                              dialog.dismiss();
-                              contentDialog.setVisibility(View.VISIBLE);
-                              loadingDialog.setVisibility(View.GONE);
-                          }
-                      }, 2000);
+                      cancelRequests();
+                      deleteAvion = new DeleteAvion();
+                      deleteAvion.execute();
                     }
                 });
                 no.setOnClickListener(new View.OnClickListener() {
@@ -187,7 +184,7 @@ public class  PlaneFragment extends Fragment {
     }
 
 
-    private int getPlaneDataPosition(String id){
+    private int getPlaneDataPosition(Integer id){
         for(int i=0; i<data.size();i++){
             if(data.get(i).getNum_avion().equals(id)) return i;
         }
@@ -204,7 +201,7 @@ public class  PlaneFragment extends Fragment {
                 if(currentPosition != null && currentPosition == 0) horizentalListAdapter.setRow_index(1);
                 horizentalListAdapter.notifyDataSetChanged();
                 planeNumber.setText(String.valueOf(data.size()));
-                Toast.makeText(context, "Avion ajouter avec succés", 1000).show();
+                Toast.makeText(context, "Avion ajouter avec succés", Toast.LENGTH_LONG).show();
                 break;
             case RequestCode.REQUEST_CODE_EDIT_PLANE:
                 AvionDataModel currentD = (AvionDataModel) d.getParcelableExtra("data");
@@ -212,13 +209,13 @@ public class  PlaneFragment extends Fragment {
                 int p = getPlaneDataPosition(currentD.getNum_avion());
                 if(currentPosition != null && currentPosition == p){
                     currentPlaneData = currentD;
-                    currentId.setText(currentD.getNum_avion());
+                    currentId.setText(String.valueOf(currentD.getNum_avion()));
                     currentName.setText(currentD.getType());
-                    currentPlaceCount.setText(currentD.getNb_places());
-
+                    currentPlaceCount.setText(String.valueOf(currentD.getNb_places()));
+                    currentColumnCount.setText(String.valueOf(currentD.getNb_colonnes()));
                 }
                 planeNumber.setText(String.valueOf(data.size()));
-                Toast.makeText(context, "Données modifier avec succés", 1000).show();
+                Toast.makeText(context, "Données modifier avec succés", Toast.LENGTH_LONG).show();
                 break;
             case RequestCode.REQUEST_CODE_REMOVE_PLANE:
                 AvionDataModel rmData = (AvionDataModel) d.getParcelableExtra("data");
@@ -227,7 +224,7 @@ public class  PlaneFragment extends Fragment {
                 planeNumber.setText(String.valueOf(data.size()));
                 if(currentPosition == null){
                     horizentalListAdapter.notifyDataSetChanged();
-                    Toast.makeText(context, "Données supprimer avec succés", 1000).show();
+                    Toast.makeText(context, "Données supprimer avec succés", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if(pos == currentPosition){
@@ -240,7 +237,7 @@ public class  PlaneFragment extends Fragment {
                     horizentalListAdapter.setRow_index(currentPosition-1);
                 }
                 horizentalListAdapter.notifyDataSetChanged();
-                Toast.makeText(context, "Données supprimer avec succés", 1000).show();
+                Toast.makeText(context, "Données supprimer avec succés", Toast.LENGTH_LONG).show();
                 break;
             default:
 
@@ -250,5 +247,75 @@ public class  PlaneFragment extends Fragment {
 
     public void setItem(ArrayList<StaticHorizentalListModel> item) {
         this.item = item;
+    }
+
+    private int sleepThreadTime = 1500;
+    private void cancelRequests(){
+        if(call!=null) call.cancel();
+        if(deleteAvion!=null)deleteAvion.cancel(true);
+    }
+    private void deleteAvionChange(){
+        removeItemCallBack.removeItem(currentPosition);
+        planeNumber.setText(String.valueOf(data.size()));
+        horizentalListAdapter.setIsFirstClicked(true);
+        horizentalListAdapter.setRow_index(-1);
+        horizentalListAdapter.notifyDataSetChanged();
+        planeContent.removeView(planed);
+        planeContent.addView(selectionIcon);
+        dialog.dismiss();
+        contentDialog.setVisibility(View.VISIBLE);
+        loadingDialog.setVisibility(View.GONE);
+    }
+    private class DeleteAvion extends AsyncTask<Void, Boolean, Void> {
+
+        @Override
+        protected void onPreExecute(){
+            contentDialog.setVisibility(View.GONE);
+            loadingDialog.setVisibility(View.VISIBLE);
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(sleepThreadTime);
+                Avion av = ApiCallConfig.retrofit.create(Avion.class);
+                call = av.deleteAvion(Integer.parseInt(currentId.getText().toString().trim()));
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if(!response.isSuccessful()){
+                            Toast.makeText(context, "Erreur, Veuiller verifier votre connexion internet!", Toast.LENGTH_LONG).show();
+                            publishProgress(false);
+                            return;
+                        }
+                        publishProgress(true);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(context, "Erreur, Veuiller verifier votre connexion internet!", Toast.LENGTH_LONG).show();
+                        publishProgress(false);
+                        return;
+                    }
+                });
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Boolean... value){
+            if(value[0]){
+                deleteAvionChange();
+            }
+
+        }
+        @Override
+        protected void onPostExecute(Void aVoid){
+            loadingDialog.setVisibility(View.GONE);
+            contentDialog.setVisibility(View.VISIBLE);
+            dialog.dismiss();
+        }
     }
 }

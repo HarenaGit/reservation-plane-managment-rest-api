@@ -127,7 +127,7 @@ public class EditReservationActivity extends AppCompatActivity {
                     public void run() {
 
                         Intent intent=new Intent();
-                        intent.putExtra("data", new ReservationDataModel(numReserv.getText().toString().trim(), flightData.get(numVolPosition).getId(), flightData.get(numVolPosition).getPlaneId(), String.valueOf(placeData.get(numPlacePosition)),flightData.get(numVolPosition).getPlane(), dateTimeReserv.getText().toString().trim(), passengerName.getText().toString().trim()));
+                    //    intent.putExtra("data", new ReservationDataModel(numReserv.getText().toString().trim(), String.valueOf(flightData.get(numVolPosition).getNum_vol()), String.valueOf(flightData.get(numVolPosition).getNum_avion()), String.valueOf(placeData.get(numPlacePosition)),flightData.get(numVolPosition).getType(), dateTimeReserv.getText().toString().trim(), passengerName.getText().toString().trim()));
                         setResult(RequestCode.REQUEST_CODE_ADD_RESERV,intent);
                         finish();
                     }
@@ -147,9 +147,9 @@ public class EditReservationActivity extends AppCompatActivity {
             public void run() {
                 numVol.setSelection(numVolPosition);
         }});
-        numReserv.setText(reservData.getId());
-        passengerName.setText(reservData.getPassengerName());
-        dateTimeReserv.setText(reservData.getReservationDate());
+        numReserv.setText(reservData.getNum_reservation());
+        passengerName.setText(reservData.getNom_voayageur());
+        dateTimeReserv.setText(reservData.getDate_reservation());
     }
 
     private void showDateTimeDialog(EditText d) {
@@ -179,14 +179,14 @@ public class EditReservationActivity extends AppCompatActivity {
 
     private int getFlightDataPosition(){
         for(int i =0; i<flightData.size();i++){
-            if(flightData.get(i).getId().equals(reservData.getFlightId())) return i;
+            if(flightData.get(i).getNum_vol().equals(reservData.getNum_vol())) return i;
         }
         return 0;
     }
 
     private int getPlaceDataPosition(){
         for(int i=0;i<placeData.size();i++){
-            if(placeData.get(i) == Integer.parseInt(reservData.getPlaceNumber())) return i;
+            if(placeData.get(i) == reservData.getNum_place()) return i;
         }
         return 0;
     }

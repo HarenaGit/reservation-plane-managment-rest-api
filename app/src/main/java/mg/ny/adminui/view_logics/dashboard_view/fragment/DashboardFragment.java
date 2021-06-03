@@ -33,7 +33,7 @@ import java.util.List;
 import mg.ny.adminui.R;
 import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListAdapter;
-import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
+import mg.ny.adminui.data_model.StaticHorizentalListModel;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.HorizentalListCallBack;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.RemoveItemCallBack;
 

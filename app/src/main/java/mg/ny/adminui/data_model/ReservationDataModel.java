@@ -3,80 +3,84 @@ package mg.ny.adminui.data_model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ReservationDataModel implements Parcelable {
-    private String id;
-    private String flightId;
-    private String planeId;
-    private String planeName;
-    private String placeNumber;
-    private String reservationDate;
-    private String passengerName;
+    private Integer num_reservation;
+    private Integer num_vol;
+    private Integer num_place;
+    private String date_reservation;
+    private String nom_voayageur;
 
 
-    public ReservationDataModel(String id, String flightId, String planeId, String planeName, String placeNumber, String reservationDate, String passengerName) {
-        this.id = id;
-        this.flightId = flightId;
-        this.planeId = planeId;
-        this.planeName = planeName;
-        this.placeNumber = placeNumber;
-        this.reservationDate = reservationDate;
-        this.passengerName = passengerName;
+    public ReservationDataModel(Integer num_reservation, Integer num_vol, Integer num_place, String date_reservation, String nom_voayageur) {
+        this.num_reservation = num_reservation;
+        this.num_vol = num_vol;
+        this.num_place = num_place;
+        this.date_reservation = date_reservation;
+        this.nom_voayageur = nom_voayageur;
+    }
+    public ReservationDataModel(){
+        this.num_reservation = null;
+        this.num_vol = null;
+        this.num_place = null;
+        this.date_reservation = "";
+        this.nom_voayageur = "";
     }
 
-    public String getId() {
-        return id;
+    public Integer getNum_reservation() {
+        return num_reservation;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNum_reservation(Integer num_reservation) {
+        this.num_reservation = num_reservation;
     }
 
-    public String getFlightId() {
-        return flightId;
+    public Integer getNum_vol() {
+        return num_vol;
     }
 
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
+    public void setNum_vol(Integer num_vol) {
+        this.num_vol = num_vol;
     }
 
-    public String getPlaneId() {
-        return planeId;
+
+    public Integer getNum_place() {
+        return num_place;
     }
 
-    public void setPlaneId(String planeId) {
-        this.planeId = planeId;
+    public void setNum_place(Integer num_place) {
+        this.num_place = num_place;
     }
 
-    public String getPlaneName() {
-        return planeName;
+    public String getDate_reservation() {
+        return formatDate(date_reservation);
     }
 
-    public void setPlaneName(String planeName) {
-        this.planeName = planeName;
+    public void setDate_reservation(String date_reservation) {
+        this.date_reservation = date_reservation;
     }
 
-    public String getPlaceNumber() {
-        return placeNumber;
+    public String formatDate(String d){
+        SimpleDateFormat enterFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = enterFormat.parse(d);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            return d;
+        }
     }
 
-    public void setPlaceNumber(String placeNumber) {
-        this.placeNumber = placeNumber;
+    public String getNom_voayageur() {
+        return nom_voayageur;
     }
 
-    public String getReservationDate() {
-        return reservationDate;
-    }
-
-    public void setReservationDate(String reservationDate) {
-        this.reservationDate = reservationDate;
-    }
-
-    public String getPassengerName() {
-        return passengerName;
-    }
-
-    public void setPassengerName(String passengerName) {
-        this.passengerName = passengerName;
+    public void setNom_voayageur(String nom_voayageur) {
+        this.nom_voayageur = nom_voayageur;
     }
 
     @Override
@@ -86,22 +90,18 @@ public class ReservationDataModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(flightId);
-        dest.writeString(planeId);
-        dest.writeString(planeName);
-        dest.writeString(placeNumber);
-        dest.writeString(reservationDate);
-        dest.writeString(passengerName);
+        dest.writeInt(num_reservation);
+        dest.writeInt(num_vol);
+        dest.writeInt(num_place);
+        dest.writeString(date_reservation);
+        dest.writeString(nom_voayageur);
     }
     public ReservationDataModel(Parcel source){
-        id = source.readString();
-        flightId = source.readString();
-        planeId = source.readString();
-        planeName = source.readString();
-        placeNumber = source.readString();
-        reservationDate = source.readString();
-        passengerName = source.readString();
+        num_reservation = source.readInt();
+        num_vol = source.readInt();
+        num_place = source.readInt();
+        date_reservation = source.readString();
+        nom_voayageur = source.readString();
     }
     public static final Creator<ReservationDataModel> CREATOR = new Creator<ReservationDataModel>() {
         @Override

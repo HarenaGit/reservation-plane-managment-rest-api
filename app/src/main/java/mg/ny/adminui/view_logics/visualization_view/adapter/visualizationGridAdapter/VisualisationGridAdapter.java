@@ -24,7 +24,7 @@ public class VisualisationGridAdapter extends ArrayAdapter<ReservationDataModel>
         this.reservation =reservation;
     }
 
-    public ReservationDataModel getItem(int position){
+    public ReservationDataModel getElement(int position){
         return reservation.get(position);
     }
 
@@ -35,25 +35,16 @@ public class VisualisationGridAdapter extends ArrayAdapter<ReservationDataModel>
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-
         Holder holder = new Holder();
-
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.visualisation_list_item, parent, false);
-
         holder.place = (TextView) convertView.findViewById(R.id.textItem);
         holder.container = (RelativeLayout) convertView.findViewById(R.id.containerGrid);
-
-
         holder.place.setText(String.valueOf(position+1));
-
         ReservationDataModel p = reservation.get(position);
-        if (p.getPlaceNumber().equals(String.valueOf(position+1))) {
+        if (p.getNum_place() == position+1) {
                 holder.container.setBackgroundResource(R.drawable.box_container_active);
                 holder.place.setTextColor(holder.place.getResources().getColor(R.color.white));
-
         }
-
         return convertView;
     }
 

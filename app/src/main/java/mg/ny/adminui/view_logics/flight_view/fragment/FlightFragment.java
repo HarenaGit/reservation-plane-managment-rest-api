@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,15 +24,21 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
+import mg.ny.adminui.ApiCallConfig;
 import mg.ny.adminui.R;
+import mg.ny.adminui.apiCall.Vol;
 import mg.ny.adminui.view_logics.RequestCode;
 import mg.ny.adminui.data_model.FlightDataModel;
 import mg.ny.adminui.view_logics.flight_view.activity.AddFlightActivity;
 import mg.ny.adminui.view_logics.flight_view.activity.EditFlightActivity;
+import mg.ny.adminui.view_logics.flight_view.activity.SearchFlightActivity;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListAdapter;
-import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
+import mg.ny.adminui.data_model.StaticHorizentalListModel;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.HorizentalListCallBack;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.RemoveItemCallBack;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,6 +63,9 @@ public class  FlightFragment extends Fragment {
     private RemoveItemCallBack removeItemCallBack;
     private LinearLayout contentDialog;
     private RelativeLayout loadingDialog;
+
+    private DeleteVol deleteVol;
+    private Call<Void> call;
     public FlightFragment(ArrayList<StaticHorizentalListModel> item, ArrayList<FlightDataModel> data, RemoveItemCallBack removeItemCallBack){
         this.item = item;
         this.data = data;
@@ -142,12 +152,12 @@ public class  FlightFragment extends Fragment {
             currentArrivalDate = view.findViewById(R.id.arrivalDate);
             currentCost = view.findViewById(R.id.cost);
 
-            currentCost.setText(currentFlightData.getCost());
-            currentDepartureDate.setText(currentFlightData.getDepartureDate());
-            currentDepartureCity.setText(currentFlightData.getDepartureCity());
-            currentArrivalDate.setText(currentFlightData.getArrivalDate());
-            currentArrivalCity.setText(currentFlightData.getArrivalCity());
-            currentPlaneName.setText(currentFlightData.getPlane());
+            currentCost.setText(String.valueOf(currentFlightData.getFrais()));
+            currentDepartureDate.setText(currentFlightData.getHeure_depart());
+            currentDepartureCity.setText(currentFlightData.getVille_depart());
+            currentArrivalDate.setText(currentFlightData.getHeure_arrivee());
+            currentArrivalCity.setText(currentFlightData.getVille_arrivee());
+            currentPlaneName.setText(currentFlightData.getType());
 
             return 0;
         };
@@ -168,23 +178,7 @@ public class  FlightFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contentDialog.setVisibility(View.GONE);
-                loadingDialog.setVisibility(View.VISIBLE);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeItemCallBack.removeItem(currentPosition);
-                        flighNumber.setText(String.valueOf(data.size()));
-                        horizentalListAdapter.setIsFirstClicked(true);
-                        horizentalListAdapter.setRow_index(-1);
-                        horizentalListAdapter.notifyDataSetChanged();
-                        planeContent.removeView(planed);
-                        planeContent.addView(selectionIcon);
-                        dialog.dismiss();
-                        contentDialog.setVisibility(View.VISIBLE);
-                        loadingDialog.setVisibility(View.GONE);
-                    }
-                }, 2000);
+
             }
         });
         no.setOnClickListener(new View.OnClickListener() {
@@ -197,16 +191,16 @@ public class  FlightFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 TextView textDialog = dialog.findViewById(R.id.planeRemoveId);
-                textDialog.setText("Vol numéro : " + currentFlightData.getId());
+                textDialog.setText("Vol numéro : " + currentFlightData.getNum_vol());
                 dialog.show();
             }
         });
     }
 
 
-    private int getFlightDataPosition(String id){
+    private int getFlightDataPosition(Integer id){
         for(int i=0; i<data.size();i++){
-            if(data.get(i).getId().equals(id)) return i;
+            if(data.get(i).getNum_vol().equals(id)) return i;
         }
         return -1;
     }
@@ -221,32 +215,32 @@ public class  FlightFragment extends Fragment {
                 if(currentPosition != null && currentPosition == 0) horizentalListAdapter.setRow_index(1);
                 horizentalListAdapter.notifyDataSetChanged();
                 flighNumber.setText(String.valueOf(data.size()));
-                Toast.makeText(context, "Vol ajouter avec succés", 1000).show();
+                Toast.makeText(context, "Vol ajouter avec succés", Toast.LENGTH_LONG).show();
                 break;
             case RequestCode.REQUEST_CODE_EDIT_FLIGHT:
                 FlightDataModel currentD = (FlightDataModel) d.getParcelableExtra("data");
                 horizentalListAdapter.notifyDataSetChanged();
-                int p = getFlightDataPosition(currentD.getId());
+                int p = getFlightDataPosition(currentD.getNum_vol());
                 if(currentPosition != null && currentPosition == p){
                    currentFlightData = currentD;
-                   currentPlaneName.setText(currentFlightData.getPlane());
-                   currentDepartureDate.setText(currentFlightData.getDepartureDate());
-                   currentArrivalDate.setText(currentFlightData.getArrivalDate());
-                   currentDepartureCity.setText(currentFlightData.getDepartureCity());
-                   currentArrivalCity.setText(currentFlightData.getArrivalCity());
-                   currentCost.setText(currentFlightData.getCost());
+                   currentPlaneName.setText(currentFlightData.getType());
+                   currentDepartureDate.setText(currentFlightData.getHeure_depart());
+                   currentArrivalDate.setText(currentFlightData.getHeure_arrivee());
+                   currentDepartureCity.setText(currentFlightData.getVille_depart());
+                   currentArrivalCity.setText(currentFlightData.getVille_arrivee());
+                   currentCost.setText(String.valueOf(currentFlightData.getFrais()));
                 }
                 flighNumber.setText(String.valueOf(data.size()));
-                Toast.makeText(context, "Données modifier avec succés", 1000).show();
+                Toast.makeText(context, "Données modifier avec succés", Toast.LENGTH_LONG).show();
                 break;
             case RequestCode.REQUEST_CODE_REMOVE_FLIGHT:
                 FlightDataModel rmData = (FlightDataModel) d.getParcelableExtra("data");
-                int pos = getFlightDataPosition(rmData.getId());
+                int pos = getFlightDataPosition(rmData.getNum_vol());
                 removeItemCallBack.removeItem(pos);
                 flighNumber.setText(String.valueOf(data.size()));
                 if(currentPosition == null){
                     horizentalListAdapter.notifyDataSetChanged();
-                    Toast.makeText(context, "Données supprimer avec succés", 1000).show();
+                    Toast.makeText(context, "Données supprimer avec succés", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if(pos == currentPosition){
@@ -259,12 +253,81 @@ public class  FlightFragment extends Fragment {
                     horizentalListAdapter.setRow_index(currentPosition-1);
                 }
                 horizentalListAdapter.notifyDataSetChanged();
-                Toast.makeText(context, "Données supprimer avec succés", 1000).show();
+                Toast.makeText(context, "Données supprimer avec succés", Toast.LENGTH_LONG).show();
                 break;
             default:
 
         }
 
+    }
+
+    private void deleteVolChange(){
+        removeItemCallBack.removeItem(currentPosition);
+        flighNumber.setText(String.valueOf(data.size()));
+        horizentalListAdapter.setIsFirstClicked(true);
+        horizentalListAdapter.setRow_index(-1);
+        horizentalListAdapter.notifyDataSetChanged();
+        planeContent.removeView(planed);
+        planeContent.addView(selectionIcon);
+    }
+
+    private void cancelRequests(){
+        if(call!=null) call.cancel();
+        if(deleteVol !=null) deleteVol.cancel(true);
+    }
+
+    private int sleepThreadTime = 1500;
+    private class DeleteVol extends AsyncTask<Void, Boolean, Void> {
+
+        @Override
+        protected void onPreExecute(){
+            contentDialog.setVisibility(View.GONE);
+            loadingDialog.setVisibility(View.VISIBLE);
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(sleepThreadTime);
+                Vol v = ApiCallConfig.retrofit.create(Vol.class);
+                call = v.deleteVol(currentFlightData.getNum_vol());
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if(!response.isSuccessful()){
+                            Toast.makeText(context, "Erreur, Veuiller verifier votre connexion internet!", Toast.LENGTH_LONG).show();
+                            publishProgress(false);
+                            return;
+                        }
+                        publishProgress(true);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(context, "Erreur, Veuiller verifier votre connexion internet!", Toast.LENGTH_LONG).show();
+                        publishProgress(false);
+                        return;
+                    }
+                });
+
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Boolean... value){
+            if(value[0]){
+                deleteVolChange();
+            }
+        }
+        @Override
+        protected void onPostExecute(Void aVoid){
+            contentDialog.setVisibility(View.VISIBLE);
+            loadingDialog.setVisibility(View.GONE);
+            dialog.dismiss();
+        }
     }
 
 

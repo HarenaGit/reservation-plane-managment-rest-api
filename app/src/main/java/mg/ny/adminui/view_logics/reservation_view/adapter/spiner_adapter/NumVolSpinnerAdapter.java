@@ -46,7 +46,7 @@ public class NumVolSpinnerAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false);
         }
         TextView text = convertView.findViewById(R.id.spinnerTextItem);
-        text.setText(items.get(position).getId());
+        text.setText(items.get(position).getNum_vol());
         return convertView;
     }
 }

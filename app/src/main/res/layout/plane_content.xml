@@ -241,6 +241,71 @@
                         </LinearLayout>
                     </RelativeLayout>
                 </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginBottom="20dp"
+                    >
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        >
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+                            <RelativeLayout
+                                android:layout_width="65dp"
+                                android:layout_height="65dp"
+                                android:background="@drawable/element_container_red"
+                                >
+                                <ImageButton
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:src="@drawable/ic_data_usage"
+                                    android:background="@color/red"
+                                    android:layout_centerInParent="true"
+                                    />
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="15dp"
+                                    android:orientation="vertical"
+                                    >
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Nombres de colonnes"
+                                        android:letterSpacing="0.05"
+                                        android:textColor="@color/black"
+                                        android:textSize="13dp"
+                                        android:fontFamily="@font/segeouibold"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginBottom="5dp"
+                                        />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:id="@+id/planeColumCount"
+                                        android:textColor="@color/dark_grey"
+                                        android:textSize="11dp"
+                                        android:fontFamily="@font/opensans_semibold"
+                                        android:layout_alignParentRight="true"
+                                        />
+                                </LinearLayout>
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+                    </RelativeLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 

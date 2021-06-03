@@ -27,7 +27,7 @@ import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.ItemViewHolder;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListAdapter;
-import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
+import mg.ny.adminui.data_model.StaticHorizentalListModel;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.HorizentalListCallBack;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.RemoveItemCallBack;
 import mg.ny.adminui.view_logics.visualization_view.adapter.visualizationGridAdapter.VisualisationGridAdapter;
@@ -45,6 +45,7 @@ public class  VisualisationFragment extends Fragment {
     private RelativeLayout loadingDialog;
     private RelativeLayout loader;
     private ContentAsyncTasks tasks;
+
     public VisualisationFragment(ArrayList<StaticHorizentalListModel> item, ArrayList<ReservationDataModel> data, RemoveItemCallBack removeItemCallBack){
         this.item = item;
         this.data = data;
@@ -120,7 +121,6 @@ public class  VisualisationFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv_plane);
         HorizentalListCallBack<RecyclerView.ViewHolder, Integer, Boolean, Integer> callbackHorizentalList = (RecyclerView.ViewHolder holder, Integer position, Boolean isFirstClicked) -> {
-
             if(isFirstClicked) {
                 planeContent.removeView(selectionIcon);
                 planeContent.addView(planed);
@@ -128,24 +128,25 @@ public class  VisualisationFragment extends Fragment {
             this.currentPosition = position;
             if(holder instanceof ItemViewHolder){
                 ItemViewHolder viewHolder = (ItemViewHolder) holder;
-                String currentFlightId = item.get(position).getTxt();
+                Integer currentFlightId = item.get(position).getNum_vol();
 
                if(tasks != null){
+                   tasks.cancelRequests();
                    tasks.cancel(true);
                }
 
                 gridView = planed.findViewById(R.id.simpleGridView);
-                tasks = new ContentAsyncTasks(context, data, currentFlightId, planed, adapter, gridView, loader);
+                tasks = new ContentAsyncTasks(context, data, item.get(position), planed, adapter, gridView, loader);
                 tasks.execute();
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         ReservationDataModel r = tasks.getItem(position);
-                        if( r.getFlightId().equals(currentFlightId) && !r.getPlaceNumber().equals("")){
+                        if( r.getNum_vol() == currentFlightId && r.getNum_place() != null){
                            TextView t = dialog.findViewById(R.id.dialogId);
-                           t.setText(r.getId());
+                           t.setText(r.getNum_reservation());
                            TextView d = dialog.findViewById(R.id.detailDialog);
-                           String detail = r.getPassengerName() + ", réservé le " + r.getReservationDate() + ", place numéro " + r.getPlaceNumber();
+                           String detail = r.getNom_voayageur() + ", réservé le " + r.getDate_reservation() + ", place numéro " + r.getNum_place();
                            d.setText(detail);
                            dialog.show();
                         }

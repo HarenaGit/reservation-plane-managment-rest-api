@@ -4,36 +4,37 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class AvionDataModel implements Parcelable {
-    private String num_avion;
+    private Integer num_avion;
     private String type;
-    private String nb_places;
-    private String nb_colonnes;
-    public AvionDataModel(String num_avion, String type, String nb_places){
+    private Integer nb_places;
+    private Integer nb_colonnes;
+    public AvionDataModel(Integer num_avion, String type, Integer nb_places){
         this.num_avion = num_avion;
         this.type = type;
         this.nb_places = nb_places;
     }
-    public AvionDataModel(String num_avion, String type, String nb_places, String nb_colonnes){
+    public AvionDataModel(Integer num_avion, String type, Integer nb_places, Integer nb_colonnes){
         this.num_avion = num_avion;
         this.type = type;
         this.nb_places = nb_places;
         this.nb_colonnes = nb_colonnes;
     }
     public AvionDataModel(Parcel source){
-        num_avion = source.readString();
+        num_avion = source.readInt();
         type = source.readString();
-        nb_places = source.readString();
+        nb_places = source.readInt();
+        nb_colonnes = source.readInt();
     }
-    public String getNum_avion(){
+    public Integer getNum_avion(){
         return  this.num_avion;
     }
     public String getType(){
         return this.type;
     }
-    public String getNb_places(){
+    public Integer getNb_places(){
         return this.nb_places;
     }
-    public String getNb_colonnes() { return nb_colonnes; }
+    public Integer getNb_colonnes() { return nb_colonnes; }
 
     @Override
     public int describeContents() {
@@ -42,10 +43,10 @@ public class AvionDataModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(num_avion);
+        dest.writeInt(num_avion);
         dest.writeString(type);
-        dest.writeString(nb_places);
-        dest.writeString(nb_colonnes);
+        dest.writeInt(nb_places);
+        dest.writeInt(nb_colonnes);
     }
 
     public static final Creator<AvionDataModel> CREATOR = new Creator<AvionDataModel>() {

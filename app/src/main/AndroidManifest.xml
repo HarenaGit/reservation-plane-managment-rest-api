@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mg.ny.adminui">
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +14,6 @@
         <activity android:name=".view_logics.reservation_view.activity.AddReservationActivity" />
         <activity android:name=".view_logics.flight_view.activity.EditFlightActivity" />
         <activity android:name=".view_logics.flight_view.activity.AddFlightActivity" />
-        <activity android:name=".view_logics.flight_view.activity.MainActivity" />
         <activity android:name=".view_logics.flight_view.activity.SearchFlightActivity" />
         <activity android:name=".view_logics.plane_view.activity.AddplaneActivity" />
         <activity android:name=".view_logics.plane_view.activity.EditplaneActivity" />

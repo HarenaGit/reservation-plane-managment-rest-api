@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -26,18 +27,26 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import java.util.ArrayList;
 
+import mg.ny.adminui.ApiCallConfig;
+import mg.ny.adminui.MainActivity;
 import mg.ny.adminui.R;
+import mg.ny.adminui.apiCall.Reservation;
+import mg.ny.adminui.data_model.ReservVolJsonDataModel;
+import mg.ny.adminui.data_model.ReservationJsonDataModel;
 import mg.ny.adminui.view_logics.RequestCode;
 import mg.ny.adminui.data_model.AvionDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.ItemViewHolder;
 import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListAdapter;
-import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
+import mg.ny.adminui.data_model.StaticHorizentalListModel;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.HorizentalListCallBack;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.RemoveItemCallBack;
 import mg.ny.adminui.view_logics.reservation_view.activity.AddReservationActivity;
 import mg.ny.adminui.view_logics.reservation_view.activity.EditReservationActivity;
 import mg.ny.adminui.view_logics.reservation_view.adapter.reservationListAdapter.ReservationAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class  ReservationFragment extends Fragment {
     private ArrayList<StaticHorizentalListModel> item ;
@@ -50,6 +59,11 @@ public class  ReservationFragment extends Fragment {
     private Dialog dialog;
     private LinearLayout contentDialog;
     private RelativeLayout loadingDialog;
+    private GetReservByVol getReservByVol;
+    private Call<ReservationJsonDataModel> callGetReservByVol;
+    private Integer currentFlightId;
+    private RelativeLayout progressBar;
+    private TextView numberOfReserv;
     public ReservationFragment(ArrayList<StaticHorizentalListModel> item, ArrayList<ReservationDataModel> data, RemoveItemCallBack removeItemCallBack){
         this.item = item;
         this.data = data;
@@ -80,6 +94,7 @@ public class  ReservationFragment extends Fragment {
     private ViewGroup container;
     private AvionDataModel currentPlaneData;
     private View planeDetail;
+    private ArrayList<ReservationDataModel> currentReservData;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,7 +117,7 @@ public class  ReservationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent addActivity = new Intent(context, AddReservationActivity.class);
-                startActivityForResult(addActivity, RequestCode.REQUEST_CODE_ADD_PLANE);
+                startActivityForResult(addActivity, RequestCode.REQUEST_CODE_ADD_RESERV);
             }
         });
         planeFragement.addView(planePage);
@@ -113,6 +128,7 @@ public class  ReservationFragment extends Fragment {
         selectionIcon = inflater.inflate(R.layout.selection_icon, container, false);
         planeContent.addView(selectionIcon);
         planed = inflater.inflate(R.layout.reservation_content, container, false);
+        progressBar = planed.findViewById(R.id.loadingReservation);
         recyclerView = view.findViewById(R.id.rv_plane);
         HorizentalListCallBack<RecyclerView.ViewHolder, Integer, Boolean, Integer> callbackHorizentalList = (RecyclerView.ViewHolder holder, Integer position, Boolean isFirstClicked) -> {
             if(isFirstClicked) {
@@ -122,60 +138,14 @@ public class  ReservationFragment extends Fragment {
             this.currentPosition = position;
             if(holder instanceof ItemViewHolder){
                 ItemViewHolder viewHolder = (ItemViewHolder) holder;
-               String currentFlightId = item.get(position).getTxt();
-               ArrayList<ReservationDataModel> currentReservData = getFilteredDataByFlightId(currentFlightId);
-               listView = planed.findViewById(R.id.reservationListItem);
-               adapter = new ReservationAdapter(context, currentReservData);
-               listView.setAdapter(adapter);
-               adapter.notifyDataSetChanged();
-                SwipeMenuCreator creator = new SwipeMenuCreator() {
+                currentFlightId = item.get(position).getNum_vol();
 
-                    @Override
-                    public void create(SwipeMenu menu) {
-
-                        SwipeMenuItem editItem = new SwipeMenuItem(context);
-
-                        editItem.setBackground(new ColorDrawable(getResources().getColor(R.color.backgroundColor)));
-                        editItem.setWidth(130);
-                        editItem.setIcon(R.drawable.ic_edit);
-                        menu.addMenuItem(editItem);
-
-                        SwipeMenuItem deleteItem = new SwipeMenuItem(context);
-                        deleteItem.setBackground(new ColorDrawable(getResources().getColor(R.color.backgroundColor)));
-                        deleteItem.setWidth(100);
-                        deleteItem.setIcon(R.drawable.ic_delete_swipe);
-
-                        menu.addMenuItem(deleteItem);
-                    }
-                };
-
-                listView.setMenuCreator(creator);
-
-
-                listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-
-                        switch (index) {
-                            case 0:
-                                Intent editActivity = new Intent(context, EditReservationActivity.class);
-                                ReservationDataModel cRData = currentReservData.get(position);
-                                editActivity.putExtra("data", cRData);
-                                startActivityForResult(editActivity, RequestCode.REQUEST_CODE_EDIT_RESERV);
-                                break;
-                            case 1:
-
-                              /*
-                              imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                              TextView textDialog = dialog.findViewById(R.id.planeRemoveId);
-                                textDialog.setText("Vol numéro : " +  data.get(position).getId());
-                                dialog.show(); */
-                                break;
-                        }
-                        // false : close the menu; true : not close the menu
-                        return false;
-                    }
-                });
+                if(getReservByVol != null){
+                    callGetReservByVol.cancel();
+                    getReservByVol.cancel(true);
+                }
+                getReservByVol = new GetReservByVol();
+                getReservByVol.execute();
 
             }
             return 0;
@@ -233,9 +203,68 @@ public class  ReservationFragment extends Fragment {
     }
 
 
-    private int getPlaneDataPosition(String id){
+    private void updateReservationView(){
+        numberOfReserv = planed.findViewById(R.id.numberReservation);
+        numberOfReserv.setText("Nombre : " + currentReservData.size());
+        listView = planed.findViewById(R.id.reservationListItem);
+        adapter = new ReservationAdapter(context, currentReservData);
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+
+                SwipeMenuItem editItem = new SwipeMenuItem(context);
+
+                editItem.setBackground(new ColorDrawable(getResources().getColor(R.color.backgroundColor)));
+                editItem.setWidth(130);
+                editItem.setIcon(R.drawable.ic_edit);
+                menu.addMenuItem(editItem);
+
+                SwipeMenuItem deleteItem = new SwipeMenuItem(context);
+                deleteItem.setBackground(new ColorDrawable(getResources().getColor(R.color.backgroundColor)));
+                deleteItem.setWidth(100);
+                deleteItem.setIcon(R.drawable.ic_delete_swipe);
+
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        listView.setMenuCreator(creator);
+
+
+        listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+
+                switch (index) {
+                    case 0:
+                        Intent editActivity = new Intent(context, EditReservationActivity.class);
+                        ReservationDataModel cRData = adapter.getElement(position);
+                        editActivity.putExtra("data", cRData);
+                        startActivityForResult(editActivity, RequestCode.REQUEST_CODE_EDIT_RESERV);
+                        break;
+                    case 1:
+
+                              /*
+                              imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                              TextView textDialog = dialog.findViewById(R.id.planeRemoveId);
+                                textDialog.setText("Vol numéro : " +  data.get(position).getId());
+                                dialog.show(); */
+                        break;
+                }
+
+                return false;
+            }
+        });
+    }
+
+
+
+    private int getPlaneDataPosition(Integer id){
         for(int i=0; i<data.size();i++){
-            if(data.get(i).getId().equals(id)) return i;
+            if(data.get(i).getNum_reservation().equals(id)) return i;
         }
         return -1;
     }
@@ -250,7 +279,7 @@ public class  ReservationFragment extends Fragment {
                 if(currentPosition != null && currentPosition == 0) horizentalListAdapter.setRow_index(1);
                 horizentalListAdapter.notifyDataSetChanged();
                 numberOfItem.setText(String.valueOf(item.size()));
-                Toast.makeText(context, "Avion ajouter avec succés", 1000).show();
+                Toast.makeText(context, "Avion ajouter avec succés", Toast.LENGTH_LONG).show();
                 break;
             case RequestCode.REQUEST_CODE_EDIT_PLANE:
                 AvionDataModel currentD = (AvionDataModel) d.getParcelableExtra("data");
@@ -262,7 +291,7 @@ public class  ReservationFragment extends Fragment {
 
                 }
                 numberOfItem.setText(String.valueOf(item.size()));
-                Toast.makeText(context, "Données modifier avec succés", 1000).show();
+                Toast.makeText(context, "Données modifier avec succés", Toast.LENGTH_LONG).show();
                 break;
             case RequestCode.REQUEST_CODE_REMOVE_PLANE:
                 AvionDataModel rmData = (AvionDataModel) d.getParcelableExtra("data");
@@ -271,7 +300,7 @@ public class  ReservationFragment extends Fragment {
                 numberOfItem.setText(String.valueOf(item.size()));
                 if(currentPosition == null){
                     horizentalListAdapter.notifyDataSetChanged();
-                    Toast.makeText(context, "Données supprimer avec succés", 1000).show();
+                    Toast.makeText(context, "Données supprimer avec succés", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if(pos == currentPosition){
@@ -284,7 +313,7 @@ public class  ReservationFragment extends Fragment {
                     horizentalListAdapter.setRow_index(currentPosition-1);
                 }
                 horizentalListAdapter.notifyDataSetChanged();
-                Toast.makeText(context, "Données supprimer avec succés", 1000).show();
+                Toast.makeText(context, "Données supprimer avec succés", Toast.LENGTH_LONG).show();
                 break;
             default:
 
@@ -296,12 +325,56 @@ public class  ReservationFragment extends Fragment {
         this.item = item;
     }
 
-    private ArrayList<ReservationDataModel> getFilteredDataByFlightId(String flightId){
-        flightId = flightId.toLowerCase();
-        ArrayList<ReservationDataModel> filtered = new ArrayList<>();
-        for(ReservationDataModel object : data){
-            if(object.getFlightId().toLowerCase().contains(flightId)) filtered.add(object);
+
+    private Integer sleepThreadTime = 1500;
+    private class GetReservByVol extends AsyncTask<Void, Boolean, Void> {
+
+        @Override
+        protected void onPreExecute(){
+            progressBar.setVisibility(View.VISIBLE);
         }
-        return filtered;
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(sleepThreadTime);
+                Reservation r = ApiCallConfig.retrofit.create(Reservation.class);
+                callGetReservByVol = r.getReservation(currentFlightId);
+                callGetReservByVol.enqueue(new Callback<ReservationJsonDataModel>() {
+                    @Override
+                    public void onResponse(Call<ReservationJsonDataModel> call, Response<ReservationJsonDataModel> response) {
+                        if(!response.isSuccessful()){
+                            Toast.makeText(context,"Veuiller verifier votre connection internet! SVP:(", Toast.LENGTH_LONG).show();
+                            publishProgress(false);
+                            return;
+                        }
+                        currentReservData = response.body().getData();
+                        publishProgress(true);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ReservationJsonDataModel> call, Throwable t) {
+                        Toast.makeText(context,"Veuiller verifier votre connection internet! SVP:(", Toast.LENGTH_LONG).show();
+                        publishProgress(false);
+                        return;
+                    }
+                });
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Boolean... value){
+            if(value[0]){
+               updateReservationView();
+            }
+
+        }
+        @Override
+        protected void onPostExecute(Void aVoid){
+            progressBar.setVisibility(View.GONE);
+        }
     }
 }

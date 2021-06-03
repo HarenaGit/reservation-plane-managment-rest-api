@@ -6,34 +6,42 @@ import androidx.fragment.app.FragmentManager;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
+import mg.ny.adminui.apiCall.Avion;
+import mg.ny.adminui.apiCall.Reservation;
+import mg.ny.adminui.apiCall.Vol;
 import mg.ny.adminui.data.StaticDataGeneration;
+import mg.ny.adminui.data_model.AvionJsonDataModel;
 import mg.ny.adminui.data_model.FlightDataModel;
 import mg.ny.adminui.data_model.AvionDataModel;
+import mg.ny.adminui.data_model.ReservVolJsonDataModel;
 import mg.ny.adminui.data_model.ReservationDataModel;
+import mg.ny.adminui.data_model.VolJsonDataModel;
 import mg.ny.adminui.view_logics.RequestCode;
 import mg.ny.adminui.view_logics.dashboard_view.fragment.DashboardFragment;
 import mg.ny.adminui.view_logics.flight_view.activity.SearchFlightActivity;
 import mg.ny.adminui.view_logics.flight_view.fragment.FlightFragment;
-import mg.ny.adminui.view_logics.public_component_view.horizentalList.StaticHorizentalListModel;
+import mg.ny.adminui.data_model.StaticHorizentalListModel;
 import mg.ny.adminui.view_logics.public_component_view.interfaces.RemoveItemCallBack;
 import mg.ny.adminui.view_logics.plane_view.activity.SearchActivity;
 import mg.ny.adminui.view_logics.plane_view.fragment.PlaneFragment;
 import mg.ny.adminui.view_logics.reservation_view.fragment.ReservationFragment;
 import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
  public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +60,15 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
     private ArrayList<StaticHorizentalListModel> flightItem;
     private ArrayList<ReservationDataModel> reservationData;
     private ArrayList<StaticHorizentalListModel> reservationItem;
+    private Integer sleepThreadTime = 1500;
+    private int currentFragramentId;
+    private GetAvion getAvion;
+    private Call<AvionJsonDataModel> callGetAvion;
+    private GetVol getVol;
+    private Call<VolJsonDataModel> callGetVol;
+    private GetReservVol getReservVol;
+    private Call<ReservVolJsonDataModel> callGetReservVol;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,11 +117,22 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
         });
 
     }
+
+    private void requestCancel(){
+       if(callGetAvion != null) callGetAvion.cancel();
+       if(getAvion!=null) getAvion.cancel(true);
+       if(callGetVol!=null) callGetVol.cancel();
+       if(getVol!=null) getVol.cancel(true);
+       if(callGetReservVol != null) callGetReservVol.cancel();
+       if(getReservVol !=null) getReservVol.cancel(true);
+    }
     private void changeCurrentBottomMenuItemSelected(final int id){
+        currentFragramentId = id;
         this.searchButton.setVisibility(View.GONE);
         final ImageButton searchBtn = this.searchButton;
         progressBar.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        requestCancel();
         switch (id){
             case R.id.Dashboard:
                 if(planeData == null || planeItem == null){
@@ -119,88 +147,33 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
                 this.activityTitle.setText("Tableau de bord");
                 break;
             case R.id.Plane:
-                if(planeData == null || planeItem == null){
-                    planeData = planeData();
-                    planeItem = planeItem();
-                }
-                RemoveItemCallBack removeItemCallBack = (int p) -> {
-                   planeData.remove(p);
-                   planeItem.remove(p);
-                };
-                fragment = new PlaneFragment(planeItem, planeData, removeItemCallBack);
                 this.activityTitle.setText("Avion");
-                break;
+               getAvion =  new GetAvion();
+               getAvion.execute();
+                return;
             case R.id.Flight:
-                if(flightData == null || flightItem == null){
-                    flightData = StaticDataGeneration.getFlightData();
-                    flightItem = StaticDataGeneration.getFlightItem();
-                }
-                RemoveItemCallBack removeFlightData = (int p) -> {
-                    flightData.remove(p);
-                    flightItem.remove(p);
-                };
-                fragment = new FlightFragment(flightItem, flightData, removeFlightData);
                 this.activityTitle.setText("Vol");
-                break;
+                getVol = new GetVol();
+                getVol.execute();
+                return;
             case R.id.Reservation:
-                if(reservationData == null || reservationItem == null){
-                    reservationData = StaticDataGeneration.getReservationData();
-                    reservationItem = StaticDataGeneration.getReservationItem();
-                }
-                RemoveItemCallBack removeReservationData = (int p) -> {
-                    reservationData.remove(p);
-                 };
-                fragment = new ReservationFragment(reservationItem, reservationData, removeReservationData);
                 this.activityTitle.setText("Reservation");
-                break;
+                getReservVol = new GetReservVol();
+                getReservVol.execute();
+                return;
             case R.id.Visualization:
-                if(reservationData == null || reservationItem == null){
-                    reservationData = StaticDataGeneration.getReservationData();
-                    reservationItem = StaticDataGeneration.getReservationItem();
-                }
-                RemoveItemCallBack rm = (int p) -> {
-                    reservationData.remove(p);
-                };
-                fragment = new VisualisationFragment(reservationItem, reservationData, rm);
                 this.activityTitle.setText("Visualisation");
+                getReservVol = new GetReservVol();
+                getReservVol.execute();
                 break;
         }
-        
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        CompletableFuture<Void> future = CompletableFuture.runAsync(new Runnable() {
-                            @Override
-                            public void run() {
-                                fragmentManager = getSupportFragmentManager();
-                                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                            }
-                        });
-                        try {
-                           synchronized (this){
-                               future.get();
-                               progressBar.setVisibility(View.GONE);
-                               if(id != R.id.Dashboard && id != R.id.Visualization) searchBtn.setVisibility(View.VISIBLE);
-                               else searchBtn.setVisibility(View.GONE);
-                           }
-
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, 2000);
     }
-
-     private int getFlightDataPosition(String id){
+    private int getFlightDataPosition(Integer id){
          for(int i=0; i<flightData.size();i++){
-             if(flightData.get(i).getId().equals(id)) return i;
+             if(flightData.get(i).getNum_vol().equals(id)) return i;
          }
          return -1;
      }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == Activity.RESULT_CANCELED) return;
@@ -221,15 +194,18 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
             case RequestCode.REQUEST_CODE_ADD_FLIGHT:
                 FlightDataModel currentFlightData = (FlightDataModel) data.getParcelableExtra("data");
                 flightData.add(0, currentFlightData);
-                flightItem.add(0, new StaticHorizentalListModel(currentFlightData.getId()));
+                flightItem.add(0, new StaticHorizentalListModel(String.valueOf(currentFlightData.getNum_vol())));
                 break;
             case RequestCode.REQUEST_CODE_EDIT_FLIGHT:
                 FlightDataModel currentFlData = (FlightDataModel) data.getParcelableExtra("data");
-                int currentFlPos = getFlightDataPosition(currentFlData.getId());
+                int currentFlPos = getFlightDataPosition(currentFlData.getNum_vol());
                 if(currentFlPos>=0){
                     flightData.set(currentFlPos, currentFlData);
-                    flightItem.set(currentFlPos, new StaticHorizentalListModel(currentFlData.getId()));
+                    flightItem.set(currentFlPos, new StaticHorizentalListModel(String.valueOf(currentFlData.getNum_vol())));
                 }
+                break;
+            case RequestCode.REQUEST_CODE_ADD_RESERV:
+                changeCurrentBottomMenuItemSelected(R.id.Reservation);
                 break;
             default:
         }
@@ -251,7 +227,7 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
     private void setPlaneItem(int position, StaticHorizentalListModel o){
         planeItem.set(position, o);
     }
-    private int getPlaneDataPosition(String id){
+    private int getPlaneDataPosition(Integer id){
         for(int i=0; i<planeData.size();i++){
             if(planeData.get(i).getNum_avion().equals(id)) return i;
         }
@@ -265,6 +241,213 @@ import mg.ny.adminui.view_logics.visualization_view.fragment.VisualisationFragme
     }
 
 
+    private void updatePlaneView(){
+        RemoveItemCallBack removeItemCallBack = (int p) -> {
+            planeData.remove(p);
+            planeItem.remove(p);
+        };
+        fragment = new PlaneFragment(planeItem, planeData, removeItemCallBack);
 
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        if(currentFragramentId != R.id.Dashboard && currentFragramentId != R.id.Visualization) this.searchButton.setVisibility(View.VISIBLE);
+        else this.searchButton.setVisibility(View.GONE);
+    }
 
+    private class GetAvion extends AsyncTask<Void, Boolean, Void>{
+
+        @Override
+        protected void onPreExecute(){
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(sleepThreadTime);
+                Avion av = ApiCallConfig.retrofit.create(Avion.class);
+                callGetAvion = av.getAvion();
+                callGetAvion.enqueue(new Callback<AvionJsonDataModel>() {
+                    @Override
+                    public void onResponse(Call<AvionJsonDataModel> call, Response<AvionJsonDataModel> response) {
+                        if(!response.isSuccessful()){
+                            Toast.makeText(MainActivity.this,"Veuiller verifier votre connection internet! SVP:(", Toast.LENGTH_LONG).show();
+                            publishProgress(false);
+                            return;
+                        }
+                        planeData = new ArrayList<>();
+                        planeItem = new ArrayList<>();
+                        planeData = response.body().getData();
+                        for(int i=0;i<planeData.size();i++){
+                            planeItem.add(new StaticHorizentalListModel(planeData.get(i)));
+                        }
+                        publishProgress(true);
+                    }
+
+                    @Override
+                    public void onFailure(Call<AvionJsonDataModel> call, Throwable t) {
+                        Toast.makeText(MainActivity.this,"Veuiller verifier votre connection internet! SVP:(", Toast.LENGTH_LONG).show();
+                        publishProgress(false);
+                        return;
+                    }
+                });
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Boolean... value){
+            if(value[0]){
+                updatePlaneView();
+            }
+
+        }
+        @Override
+        protected void onPostExecute(Void aVoid){
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+     private void updateVolView(){
+
+         RemoveItemCallBack removeFlightData = (int p) -> {
+             flightData.remove(p);
+             flightItem.remove(p);
+         };
+         fragment = new FlightFragment(flightItem, flightData, removeFlightData);
+         fragmentManager = getSupportFragmentManager();
+         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+         if(currentFragramentId != R.id.Dashboard && currentFragramentId != R.id.Visualization) this.searchButton.setVisibility(View.VISIBLE);
+         else this.searchButton.setVisibility(View.GONE);
+     }
+
+     private class GetVol extends AsyncTask<Void, Boolean, Void>{
+
+         @Override
+         protected void onPreExecute(){
+             progressBar.setVisibility(View.VISIBLE);
+         }
+         @Override
+         protected Void doInBackground(Void... voids) {
+             try {
+                 Thread.sleep(sleepThreadTime);
+                 Vol vol = ApiCallConfig.retrofit.create(Vol.class);
+                 callGetVol = vol.getVol();
+                 callGetVol.enqueue(new Callback<VolJsonDataModel>() {
+                     @Override
+                     public void onResponse(Call<VolJsonDataModel> call, Response<VolJsonDataModel> response) {
+                         if(!response.isSuccessful()){
+                             Toast.makeText(MainActivity.this,"Veuiller verifier votre connection internet! SVP:(", Toast.LENGTH_LONG).show();
+                             publishProgress(false);
+                             return;
+                         }
+                         flightData = new ArrayList<>();
+                         flightItem = new ArrayList<>();
+                         flightData = response.body().getData();
+                         for(int i=0;i<flightData.size();i++){
+                             flightItem.add(new StaticHorizentalListModel(flightData.get(i)));
+                         }
+                         publishProgress(true);
+                     }
+
+                     @Override
+                     public void onFailure(Call<VolJsonDataModel> call, Throwable t) {
+                         Toast.makeText(MainActivity.this,"Veuiller verifier votre connection internet! SVP:(", Toast.LENGTH_LONG).show();
+                         publishProgress(false);
+                         return;
+                     }
+                 });
+
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+
+             return null;
+         }
+         @Override
+         protected void onProgressUpdate(Boolean... value){
+             if(value[0]){
+                 updateVolView();
+             }
+
+         }
+         @Override
+         protected void onPostExecute(Void aVoid){
+             progressBar.setVisibility(View.GONE);
+         }
+     }
+
+     private void updateReservAndVizView(){
+         RemoveItemCallBack removeReservationData = (int p) -> {
+             reservationData.remove(p);
+         };
+         switch (currentFragramentId){
+             case R.id.Reservation:
+                 fragment = new ReservationFragment(reservationItem, reservationData, removeReservationData);
+                 break;
+             case R.id.Visualization:
+                 fragment = new VisualisationFragment(reservationItem, reservationData, removeReservationData);
+                 break;
+         }
+         fragmentManager = getSupportFragmentManager();
+         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+         if(currentFragramentId != R.id.Dashboard && currentFragramentId != R.id.Visualization) this.searchButton.setVisibility(View.VISIBLE);
+         else this.searchButton.setVisibility(View.GONE);
+     }
+
+     private class GetReservVol extends AsyncTask<Void, Boolean, Void>{
+
+         @Override
+         protected void onPreExecute(){
+             progressBar.setVisibility(View.VISIBLE);
+         }
+         @Override
+         protected Void doInBackground(Void... voids) {
+             try {
+                 Thread.sleep(sleepThreadTime);
+                 Reservation r = ApiCallConfig.retrofit.create(Reservation.class);
+                 callGetReservVol = r.getReservationByVol();;
+                 callGetReservVol.enqueue(new Callback<ReservVolJsonDataModel>() {
+                     @Override
+                     public void onResponse(Call<ReservVolJsonDataModel> call, Response<ReservVolJsonDataModel> response) {
+                         if(!response.isSuccessful()){
+                             Toast.makeText(MainActivity.this,"Veuiller verifier votre connection internet! SVP:(", Toast.LENGTH_LONG).show();
+                             publishProgress(false);
+                             return;
+                         }
+                         reservationItem = new ArrayList<>();
+                         for(int i=0;i<response.body().getData().size();i++){
+                             reservationItem.add(new StaticHorizentalListModel(response.body().getData().get(i)));
+                         }
+                         publishProgress(true);
+                     }
+
+                     @Override
+                     public void onFailure(Call<ReservVolJsonDataModel> call, Throwable t) {
+                         Toast.makeText(MainActivity.this,"Veuiller verifier votre connection internet! SVP:(", Toast.LENGTH_LONG).show();
+                         publishProgress(false);
+                         return;
+                     }
+                 });
+
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+
+             return null;
+         }
+         @Override
+         protected void onProgressUpdate(Boolean... value){
+             if(value[0]){
+                 updateReservAndVizView();
+             }
+
+         }
+         @Override
+         protected void onPostExecute(Void aVoid){
+             progressBar.setVisibility(View.GONE);
+         }
+     }
 }
