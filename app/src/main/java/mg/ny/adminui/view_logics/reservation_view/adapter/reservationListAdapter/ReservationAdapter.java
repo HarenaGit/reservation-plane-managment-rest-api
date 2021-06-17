@@ -44,14 +44,15 @@ public class ReservationAdapter extends ArrayAdapter<ReservationDataModel> {
         TextView detail = (TextView) convertView.findViewById(R.id.reservationDetail);
         ImageView container = (ImageView) convertView.findViewById(R.id.reservationContainer);
 
-        id.setText(p.getNum_reservation());
-        place.setText(p.getNum_place());
+        String numRsv = "Rsv-"+p.getNum_reservation();
+        id.setText(numRsv);
+        place.setText(String.valueOf(p.getNum_place()));
        container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(detail.getText().equals("")) {
-                    detail.setText("Reservé par : " + p.getNom_voayageur() + " le " + p.getDate_reservation());
+                    detail.setText("Reservé par : " + p.getNom_voyageur() + ", le " + p.getDate_reservation());
                     container.setImageResource(R.drawable.ic_arrow_up);
                 }
                 else {
@@ -64,6 +65,62 @@ public class ReservationAdapter extends ArrayAdapter<ReservationDataModel> {
 
         return convertView;
     }
+
+    @Override
+    public Filter getFilter() {
+        if (filter == null)
+            filter = new AppFilter<ReservationDataModel>(reservation);
+        return filter;
+    }
+
+    private class AppFilter<T> extends Filter {
+
+        private ArrayList<ReservationDataModel> sourceObjects;
+
+        public AppFilter(List<ReservationDataModel> objects) {
+            sourceObjects = new ArrayList<ReservationDataModel>();
+            synchronized (this) {
+                sourceObjects.addAll(objects);
+            }
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence chars) {
+            String filterSeq = chars.toString().toLowerCase();
+            FilterResults result = new FilterResults();
+            if (filterSeq != null && filterSeq.length() > 0) {
+                ArrayList<ReservationDataModel> filter = new ArrayList<ReservationDataModel>();
+
+                for (ReservationDataModel object : sourceObjects) {
+                   if(String.valueOf(object.getNum_reservation()).contains(filterSeq) || object.getNom_voyageur().toLowerCase().contains(filterSeq) || String.valueOf(object.getNum_place()).contains(filterSeq) || object.getDate_reservation().toLowerCase().contains(filterSeq))
+                        filter.add(object);
+                }
+                result.count = filter.size();
+                result.values = filter;
+            } else {
+
+                synchronized (this) {
+                    result.values = sourceObjects;
+                    result.count = sourceObjects.size();
+                }
+            }
+            return result;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint,
+                                      FilterResults results) {
+            ArrayList<T> filtered = (ArrayList<T>) results.values;
+            notifyDataSetChanged();
+            clear();
+            for (int i = 0, l = filtered.size(); i < l; i++)
+                add((ReservationDataModel) filtered.get(i));
+            notifyDataSetInvalidated();
+        }
+    }
+
+
 
 
 }

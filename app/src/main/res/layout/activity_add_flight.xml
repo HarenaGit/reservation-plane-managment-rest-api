@@ -389,7 +389,7 @@ android:orientation="vertical">
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Frais"
+                                        android:text="Frais (Ar)"
                                         android:letterSpacing="0.05"
                                         android:textColor="@color/black"
                                         android:textSize="12dp"
@@ -402,7 +402,7 @@ android:orientation="vertical">
                                         android:hint="..."
                                         android:fontFamily="@font/segeo_ui"
                                         android:textSize="14dp"
-                                        android:inputType="number"
+                                        android:inputType="numberDecimal"
                                         android:textColor="@color/dark_grey"
                                         android:background="@drawable/edit_text_background"
                                         android:id="@+id/addFlightCost"
@@ -458,7 +458,7 @@ android:orientation="vertical">
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Avion"
+                                        android:text="Avion (Av-)"
                                         android:letterSpacing="0.05"
                                         android:textColor="@color/black"
                                         android:textSize="12dp"

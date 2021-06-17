@@ -114,7 +114,7 @@
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Numéro"
+                                            android:text="Numéro (Av-)"
                                             android:letterSpacing="0.05"
                                             android:textColor="@color/black"
                                             android:textSize="15dp"

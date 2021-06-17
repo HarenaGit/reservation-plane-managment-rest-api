@@ -121,9 +121,11 @@ public class FlightDataModel implements Parcelable{
         dest.writeInt(nb_places);
         dest.writeInt(nb_colonnes);
     }
-    public FlightDataModel(Integer num_vol, Integer num_avion, Double frais, String ville_depart, String ville_arrivee, String heure_depart, String heure_arrivee) {
+    public FlightDataModel(Integer num_vol, Integer num_avion, Double frais, String ville_depart, String ville_arrivee, String heure_depart, String heure_arrivee, String type, Integer nb_places, Integer nb_colonnes) {
         this.num_vol = num_vol;
-        this.type = "";
+        this.type = type;
+        this.nb_colonnes = nb_colonnes;
+        this.nb_places = nb_colonnes;
         this.num_avion = num_avion;
         this.frais = frais;
         this.ville_depart = ville_depart;
@@ -164,4 +166,12 @@ public class FlightDataModel implements Parcelable{
         }
 
     };
+
+    public void setNb_places(Integer nb_places) {
+        this.nb_places = nb_places;
+    }
+
+    public void setNb_colonnes(Integer nb_colonnes) {
+        this.nb_colonnes = nb_colonnes;
+    }
 }

@@ -144,9 +144,10 @@ public class  VisualisationFragment extends Fragment {
                         ReservationDataModel r = tasks.getItem(position);
                         if( r.getNum_vol() == currentFlightId && r.getNum_place() != null){
                            TextView t = dialog.findViewById(R.id.dialogId);
-                           t.setText(r.getNum_reservation());
+                           String title = "Rsv-" + r.getNum_reservation();
+                           t.setText(title);
                            TextView d = dialog.findViewById(R.id.detailDialog);
-                           String detail = r.getNom_voayageur() + ", réservé le " + r.getDate_reservation() + ", place numéro " + r.getNum_place();
+                           String detail = "réservé  par :" + r.getNom_voyageur() + ", le :" + r.getDate_reservation() + ", place numéro :" + r.getNum_place();
                            d.setText(detail);
                            dialog.show();
                         }

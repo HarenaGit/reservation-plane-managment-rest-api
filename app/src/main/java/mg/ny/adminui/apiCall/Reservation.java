@@ -17,7 +17,7 @@ public interface Reservation {
     @GET("reservation/vol")
     Call<ReservVolJsonDataModel> getReservationByVol();
 
-    @GET("reservation/{id}")
+    @GET("reservation/vol/{id}")
     Call<ReservationJsonDataModel>  getReservation(@Path("id") Integer num_vol);
 
     @POST("reservation")

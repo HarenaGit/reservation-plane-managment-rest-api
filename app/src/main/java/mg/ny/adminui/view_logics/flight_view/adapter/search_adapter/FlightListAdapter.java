@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mg.ny.adminui.R;
+import mg.ny.adminui.TypeDoubleFormatter;
 import mg.ny.adminui.data_model.FlightDataModel;
 
 
@@ -29,7 +30,7 @@ public FlightListAdapter(Context context, ArrayList<FlightDataModel> flight){
         }
 
 private String detailText(String departureDate, String arrivalDate, String departureCity, String arrivalCity, Double cost){
-    String txt = "Heure de départ : " + departureDate + "; heure d'arrivée : " + arrivalDate + "; Ville de départ : " + departureCity + "; Ville d'arrivée : " + arrivalCity + "; Frais : " + cost ;
+    String txt = "Heure de départ : " + departureDate + "; heure d'arrivée : " + arrivalDate + "; Ville de départ : " + departureCity + "; Ville d'arrivée : " + arrivalCity + "; Frais : " + TypeDoubleFormatter.format(cost);
     return txt;
 }
 
@@ -51,7 +52,7 @@ public View getView(int position, View convertView, ViewGroup parent) {
         TextView detailSearch = (TextView) convertView.findViewById(R.id.detailFlightSearch);
 
         plane.setText(p.getType());
-        id.setText(p.getNum_vol());
+        id.setText(String.valueOf(p.getNum_vol()));
         detailSearch.setText(detailText(p.getHeure_depart(), p.getHeure_arrivee(), p.getVille_depart(), p.getVille_arrivee(), p.getFrais()));
 
         return convertView;

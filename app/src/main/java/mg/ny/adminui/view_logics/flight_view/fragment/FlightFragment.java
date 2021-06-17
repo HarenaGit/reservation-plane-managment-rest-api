@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import mg.ny.adminui.ApiCallConfig;
 import mg.ny.adminui.R;
+import mg.ny.adminui.TypeDoubleFormatter;
 import mg.ny.adminui.apiCall.Vol;
 import mg.ny.adminui.view_logics.RequestCode;
 import mg.ny.adminui.data_model.FlightDataModel;
@@ -152,7 +153,7 @@ public class  FlightFragment extends Fragment {
             currentArrivalDate = view.findViewById(R.id.arrivalDate);
             currentCost = view.findViewById(R.id.cost);
 
-            currentCost.setText(String.valueOf(currentFlightData.getFrais()));
+            currentCost.setText(TypeDoubleFormatter.format(currentFlightData.getFrais()));
             currentDepartureDate.setText(currentFlightData.getHeure_depart());
             currentDepartureCity.setText(currentFlightData.getVille_depart());
             currentArrivalDate.setText(currentFlightData.getHeure_arrivee());
@@ -178,7 +179,8 @@ public class  FlightFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                deleteVol = new DeleteVol();
+                deleteVol.execute();
             }
         });
         no.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +193,7 @@ public class  FlightFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 TextView textDialog = dialog.findViewById(R.id.planeRemoveId);
-                textDialog.setText("Vol numéro : " + currentFlightData.getNum_vol());
+                textDialog.setText("Vol numéro : Vol-" + currentFlightData.getNum_vol());
                 dialog.show();
             }
         });
@@ -200,7 +202,7 @@ public class  FlightFragment extends Fragment {
 
     private int getFlightDataPosition(Integer id){
         for(int i=0; i<data.size();i++){
-            if(data.get(i).getNum_vol().equals(id)) return i;
+            if(data.get(i).getNum_vol() == id) return i;
         }
         return -1;
     }
@@ -248,9 +250,6 @@ public class  FlightFragment extends Fragment {
                     horizentalListAdapter.setRow_index(-1);
                     planeContent.removeView(planed);
                     planeContent.addView(selectionIcon);
-                }
-                if(pos < currentPosition){
-                    horizentalListAdapter.setRow_index(currentPosition-1);
                 }
                 horizentalListAdapter.notifyDataSetChanged();
                 Toast.makeText(context, "Données supprimer avec succés", Toast.LENGTH_LONG).show();

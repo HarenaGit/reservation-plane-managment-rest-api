@@ -11,13 +11,43 @@
         >
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            >
+            <SearchView
+                android:id="@+id/searchIReservationItem"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:contentDescription="test"
+                android:focusable="true"
+                android:iconifiedByDefault="false"
+                android:theme="@style/Theme.SearchView"
+                android:queryHint="Rechercher..."
+                android:queryBackground="@android:color/transparent"
+                android:searchIcon="@null"
+                >
+
+            </SearchView>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/dark_grey"
+            >
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="55dp"
             android:layout_marginBottom="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             >
-
             <TextView
                 android:id="@+id/reservationPlane"
                 android:layout_width="wrap_content"
@@ -38,14 +68,17 @@
                 android:layout_alignParentRight="true"
                 />
         </RelativeLayout>
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="50dp">
+
             <com.baoyz.swipemenulistview.SwipeMenuListView
                 android:id="@+id/reservationListItem"
+                android:layout_marginTop="40dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbarThumbVertical="@null"
@@ -61,6 +94,7 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:id="@+id/loadingReservation"
+                android:background="@color/backgroundColor"
                 >
                 <com.github.ybq.android.spinkit.SpinKitView
                     style="@style/SpinKitView.Small.FadingCircle"
@@ -72,6 +106,7 @@
                      />
             </RelativeLayout>
         </RelativeLayout>
+
 
     </RelativeLayout>
 </RelativeLayout>

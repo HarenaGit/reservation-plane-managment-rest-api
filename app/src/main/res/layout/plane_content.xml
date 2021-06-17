@@ -91,7 +91,7 @@
                                         android:layout_marginBottom="5dp"
                                         android:fontFamily="@font/segeouibold"
                                         android:letterSpacing="0.05"
-                                        android:text="Numéro"
+                                        android:text="Numéro (Av-)"
                                         android:textColor="@color/black"
                                         android:textSize="13dp" />
 

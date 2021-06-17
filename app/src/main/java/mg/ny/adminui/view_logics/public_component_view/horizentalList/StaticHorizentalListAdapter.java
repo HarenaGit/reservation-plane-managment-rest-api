@@ -62,6 +62,11 @@ public class StaticHorizentalListAdapter extends RecyclerView.Adapter<RecyclerVi
         });
     }
 
+    public void setItem(ArrayList<StaticHorizentalListModel> i){
+        this.items = i;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
         return items.get(position) == null ? VIEW_TYPE_LOADING:VIEW_TYPE_ITEM;

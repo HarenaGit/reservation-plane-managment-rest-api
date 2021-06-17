@@ -109,12 +109,16 @@ public class ContentAsyncTasks extends AsyncTask<Void, Boolean, Void> {
            tkPlace.setText("Place occupée : " + String.valueOf(takenPlace));
            gridView.setNumColumns(nb_colonnes);
             gridView.setAdapter(adapter);
+            loader.setVisibility(View.GONE);
+        }
+        else{
+            loader.setVisibility(View.GONE);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        loader.setVisibility(View.GONE);
+
     }
 
 

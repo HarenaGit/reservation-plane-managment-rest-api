@@ -57,7 +57,7 @@ public class AddFlightActivity extends AppCompatActivity {
     EditText arvCity;
     EditText cost;
     Spinner plane;
-    int planePosition;
+    Integer planePosition = 0;
     private RelativeLayout loading;
     private InputMethodManager imm;
     private ArrayList<AvionDataModel> planeList;
@@ -76,7 +76,6 @@ public class AddFlightActivity extends AppCompatActivity {
 
     private void planeListReady(){
         plane = (Spinner) findViewById(R.id.addFlightPlane);
-        planeList = StaticDataGeneration.getPlaneData();
         plane.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -139,7 +138,9 @@ public class AddFlightActivity extends AppCompatActivity {
 
     private Boolean isEditTextValid(){
         if(dateTimeArvDate.getText().toString().trim().length() > 0 && dateTimeDepDate.getText().toString().trim().length() > 0 && cost.getText().toString().trim().length() > 0 && depCity.getText().toString().trim().length() > 0 && arvCity.getText().toString().trim().length() > 0) {
-            return true;
+            if (planeList.size() > 0) {
+                return true;
+            }
         }
         return false;
     }
@@ -190,7 +191,7 @@ public class AddFlightActivity extends AppCompatActivity {
             try {
                 Thread.sleep(sleepThreadTime);
                 Avion av = ApiCallConfig.retrofit.create(Avion.class);
-                callGetAvionDispo = av.getAvion();
+                callGetAvionDispo = av.getAvionDispo();
                 callGetAvionDispo.enqueue(new Callback<AvionJsonDataModel>() {
                     @Override
                     public void onResponse(Call<AvionJsonDataModel> call, Response<AvionJsonDataModel> response) {
@@ -237,12 +238,13 @@ public class AddFlightActivity extends AppCompatActivity {
         intent.putExtra("data", currentFlightData);
         setResult(RequestCode.REQUEST_CODE_ADD_FLIGHT,intent);
         finish();
-
     }
 
     int sleepThreadTime = 1000;
 
     private class PostVol extends AsyncTask<Void, Boolean, Void> {
+
+        private Boolean isSuccess = false;
 
         @Override
         protected void onPreExecute(){
@@ -263,7 +265,9 @@ public class AddFlightActivity extends AppCompatActivity {
                             return;
                         }
                         Integer id = response.body().getData().get(0);
-                        currentFlightData= new FlightDataModel(id, planeList.get(planePosition).getNum_avion(), Double.valueOf(cost.getText().toString().trim()), depCity.getText().toString().trim(), arvCity.getText().toString().trim(), dateTimeDepDate.getText().toString().trim(), dateTimeArvDate.getText().toString().trim());
+                        currentFlightData= new FlightDataModel(id, planeList.get(planePosition).getNum_avion(), Double.valueOf(cost.getText().toString().trim()), depCity.getText().toString().trim(), arvCity.getText().toString().trim(), dateTimeDepDate.getText().toString().trim(), dateTimeArvDate.getText().toString().trim(),
+                                planeList.get(planePosition).getType(), planeList.get(planePosition).getNb_places(), planeList.get(planePosition).getNb_colonnes());
+                        isSuccess = true;
                         publishProgress(true);
                     }
 
@@ -282,12 +286,12 @@ public class AddFlightActivity extends AppCompatActivity {
         }
         @Override
         protected void onProgressUpdate(Boolean... value){
-            if(value[0]) addChangeVol();
+            if (value[0]) addChangeVol();
+            loading.setVisibility(View.GONE);
         }
         @Override
         protected void onPostExecute(Void aVoid){
 
-            loading.setVisibility(View.GONE);
         }
     }
 

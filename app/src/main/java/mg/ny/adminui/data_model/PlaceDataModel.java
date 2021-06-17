@@ -5,6 +5,13 @@ public class PlaceDataModel {
     private Integer num_place;
     private Integer occupation;
 
+    public PlaceDataModel(Integer num_vol, Integer num_place, Integer occupation){
+        this.num_vol = num_vol;
+        this.num_place = num_place;
+        this.occupation = occupation;
+    }
+
+
     public Integer getNum_vol() {
         return num_vol;
     }

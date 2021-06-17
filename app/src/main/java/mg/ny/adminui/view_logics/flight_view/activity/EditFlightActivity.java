@@ -25,12 +25,14 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import mg.ny.adminui.ApiCallConfig;
 import mg.ny.adminui.R;
+import mg.ny.adminui.TypeDoubleFormatter;
 import mg.ny.adminui.apiCall.Avion;
 import mg.ny.adminui.apiCall.Vol;
 import mg.ny.adminui.data_model.AvionJsonDataModel;
@@ -78,7 +80,6 @@ public class EditFlightActivity extends AppCompatActivity {
     private void planeListReady(){
 
         plane = (Spinner) findViewById(R.id.editFlightPlane);
-        planeList = StaticDataGeneration.getPlaneData();
         plane.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -123,10 +124,11 @@ public class EditFlightActivity extends AppCompatActivity {
         arvCity = findViewById(R.id.editFlightArvCity);
         cost = findViewById(R.id.editFlightCost);
 
-        numVol.setText(currentFlightData.getNum_vol());
+        numVol.setText(String.valueOf(currentFlightData.getNum_vol()));
         depCity.setText(currentFlightData.getVille_depart());
         arvCity.setText(currentFlightData.getVille_arrivee());
-        cost.setText(String.valueOf(currentFlightData.getFrais()));
+
+        cost.setText(TypeDoubleFormatter.formatNumeric(currentFlightData.getFrais()));
 
         backButton = findViewById(R.id.backButtonFlight);
         save = findViewById(R.id.saveFlightButton);
@@ -228,7 +230,7 @@ public class EditFlightActivity extends AppCompatActivity {
             try {
                 Thread.sleep(sleepThreadTime);
                 Avion av = ApiCallConfig.retrofit.create(Avion.class);
-                callGetAvionDispo = av.getAvion();
+                callGetAvionDispo = av.getAvionDispo();
                 callGetAvionDispo.enqueue(new Callback<AvionJsonDataModel>() {
                     @Override
                     public void onResponse(Call<AvionJsonDataModel> call, Response<AvionJsonDataModel> response) {
@@ -290,6 +292,9 @@ public class EditFlightActivity extends AppCompatActivity {
                             return;
                         }
                         currentFlightData = response.body().getData().get(0);
+                        currentFlightData.setType(planeList.get(planePosition).getType());
+                        currentFlightData.setNb_places(planeList.get(planePosition).getNb_places());
+                        currentFlightData.setNb_colonnes(planeList.get(planePosition).getNb_colonnes());
                         publishProgress(true);
                     }
 
@@ -309,11 +314,10 @@ public class EditFlightActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Boolean... value){
             if(value[0]) updateViewEdit();
+            loading.setVisibility(View.GONE);
         }
         @Override
         protected void onPostExecute(Void aVoid){
-
-            loading.setVisibility(View.GONE);
         }
     }
 

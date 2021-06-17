@@ -177,7 +177,7 @@ public class  PlaneFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         TextView textDialog = dialog.findViewById(R.id.planeRemoveId);
-                        textDialog.setText("Avion numéro : " + currentId.getText());
+                        textDialog.setText("Avion numéro : Av-" + currentId.getText());
                         dialog.show();
                     }
                 });

@@ -12,22 +12,22 @@ public class ReservationDataModel implements Parcelable {
     private Integer num_vol;
     private Integer num_place;
     private String date_reservation;
-    private String nom_voayageur;
+    private String nom_voyageur;
 
 
-    public ReservationDataModel(Integer num_reservation, Integer num_vol, Integer num_place, String date_reservation, String nom_voayageur) {
+    public ReservationDataModel(Integer num_reservation, Integer num_vol, Integer num_place, String date_reservation, String nom_voyageur) {
         this.num_reservation = num_reservation;
         this.num_vol = num_vol;
         this.num_place = num_place;
         this.date_reservation = date_reservation;
-        this.nom_voayageur = nom_voayageur;
+        this.nom_voyageur = nom_voyageur;
     }
     public ReservationDataModel(){
-        this.num_reservation = null;
-        this.num_vol = null;
-        this.num_place = null;
+        this.num_reservation = -1;
+        this.num_vol = -1;
+        this.num_place = -1;
         this.date_reservation = "";
-        this.nom_voayageur = "";
+        this.nom_voyageur = "";
     }
 
     public Integer getNum_reservation() {
@@ -75,12 +75,12 @@ public class ReservationDataModel implements Parcelable {
         }
     }
 
-    public String getNom_voayageur() {
-        return nom_voayageur;
+    public String getNom_voyageur() {
+        return nom_voyageur;
     }
 
-    public void setNom_voayageur(String nom_voayageur) {
-        this.nom_voayageur = nom_voayageur;
+    public void setNom_voyageur(String nom_voyageur) {
+        this.nom_voyageur = nom_voyageur;
     }
 
     @Override
@@ -94,14 +94,14 @@ public class ReservationDataModel implements Parcelable {
         dest.writeInt(num_vol);
         dest.writeInt(num_place);
         dest.writeString(date_reservation);
-        dest.writeString(nom_voayageur);
+        dest.writeString(nom_voyageur);
     }
     public ReservationDataModel(Parcel source){
         num_reservation = source.readInt();
         num_vol = source.readInt();
         num_place = source.readInt();
         date_reservation = source.readString();
-        nom_voayageur = source.readString();
+        nom_voyageur = source.readString();
     }
     public static final Creator<ReservationDataModel> CREATOR = new Creator<ReservationDataModel>() {
         @Override

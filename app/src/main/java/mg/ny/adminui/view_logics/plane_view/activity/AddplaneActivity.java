@@ -133,11 +133,11 @@ public class AddplaneActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Boolean... value){
             if(value[0]) addChangeAvion();
+            loading.setVisibility(View.GONE);
+
         }
         @Override
         protected void onPostExecute(Void aVoid){
-
-            loading.setVisibility(View.GONE);
         }
     }
 

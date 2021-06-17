@@ -59,8 +59,8 @@ public class AddReservationActivity extends AppCompatActivity {
     Spinner numPlace;
     EditText passengerName;
     EditText dateTimeReserv;
-    int numVolPosition;
-    int numPlacePosition;
+    int numVolPosition = 0;
+    int numPlacePosition = 0;
     private Call<PostJsonDataModel> callPostReserv;
     private PostReserv postReserv;
     private RelativeLayout loading;
@@ -75,6 +75,10 @@ public class AddReservationActivity extends AppCompatActivity {
     private ArrayList<PlaceDataModel> placeList;
     private Integer nb_places;
     private ReservationDataModel currentReservationData;
+    public static class Occupation{
+        public static final Integer TRUE = 1;
+        public static final Integer FALSE = 0;
+    }
 
     private void placeDataReady(){
         SpinnerAdapter placeDataAdapter = new NumPlaceSpinnerAdapter(getApplicationContext(), placeData);
@@ -86,6 +90,8 @@ public class AddReservationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 numVolPosition = position;
+                getPlace = new GetPlace();
+                getPlace.execute();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -139,6 +145,8 @@ public class AddReservationActivity extends AppCompatActivity {
                     Toast.makeText(AddReservationActivity.this, "Veuiller verifier vos données!", Toast.LENGTH_LONG).show();
                     return;
                 }
+                postReserv = new PostReserv();
+                postReserv.execute();
             }
         });
     }
@@ -208,7 +216,7 @@ public class AddReservationActivity extends AppCompatActivity {
         for(int i=1;i<=nb_places;i++){
             Boolean isInsertion = true;
             for(PlaceDataModel object: placeList){
-                if(object.getNum_place() == i && object.getOccupation() == 1) isInsertion = false;
+                if(object.getNum_place() == i && object.getOccupation() == Occupation.TRUE) isInsertion = false;
             }
             if(isInsertion) l.add(i);
         }
@@ -345,7 +353,7 @@ public class AddReservationActivity extends AppCompatActivity {
                             publishProgress(false);
                             return;
                         }
-                       currentReservationData =  new ReservationDataModel(response.body().getData().get(0), flightData.get(numVolPosition).getNum_vol(), placeData.get(numPlacePosition), dateTimeReserv.getText().toString().trim(), passengerName.getText().toString().trim());
+                        currentReservationData =  new ReservationDataModel(response.body().getData().get(0), flightData.get(numVolPosition).getNum_vol(), placeData.get(numPlacePosition), dateTimeReserv.getText().toString().trim(), passengerName.getText().toString().trim());
                         publishProgress(true);
                     }
 
@@ -368,11 +376,11 @@ public class AddReservationActivity extends AppCompatActivity {
             if(value[0]){
                 addReservation();
             }
-
+            loading.setVisibility(View.GONE);
         }
         @Override
         protected void onPostExecute(Void aVoid){
-            loading.setVisibility(View.GONE);
+
         }
     }
 

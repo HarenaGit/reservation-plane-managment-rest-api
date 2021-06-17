@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundColor"
     tools:context=".view_logics.flight_view.activity.AddFlightActivity"
     android:orientation="vertical">
@@ -261,7 +262,25 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="32dp"
                                             />
+
                                     </LinearLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:visibility="gone"
+                                        android:id="@+id/editLoadingPlace"
+                                        >
+                                        <com.github.ybq.android.spinkit.SpinKitView
+                                            style="@style/SpinKitView.Small.ThreeBounce"
+                                            android:id="@+id/smallLoader"
+                                            android:layout_width="100dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerInParent="true"
+                                            android:layout_gravity="center"
+                                            app:SpinKit_Color="@color/blue"
+                                            />
+                                    </RelativeLayout>
 
                                 </RelativeLayout>
 
@@ -425,7 +444,7 @@
         </LinearLayout>
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/addFlightLoading"
+        android:id="@+id/editFlightLoading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/backgroundColor"

@@ -55,6 +55,12 @@ public class SearchFlightActivity extends AppCompatActivity {
     private DeleteVol deleteVol;
     private Call<Void> call;
     private int p;
+    private void changeSearchViewFont(){
+        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView searchText = (TextView) searchView.findViewById(id);
+        Typeface ft = ResourcesCompat.getFont(this, R.font.segeo_ui);
+        searchText.setTypeface(ft);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +68,8 @@ public class SearchFlightActivity extends AppCompatActivity {
         listView = findViewById(R.id.searchListItem);
         listView.setVisibility(View.GONE);
         searchView = findViewById(R.id.searchItem);
-        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-        TextView searchText = (TextView) searchView.findViewById(id); backButton = findViewById(R.id.backButton);
-        Typeface ft = ResourcesCompat.getFont(this, R.font.segeo_ui);
-        searchText.setTypeface(ft);
+        backButton = findViewById(R.id.backButton);
+        changeSearchViewFont();
         imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

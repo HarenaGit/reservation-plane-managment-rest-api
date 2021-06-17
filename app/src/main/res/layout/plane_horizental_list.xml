@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,5 +33,22 @@
                 android:layout_centerInParent="true"
                 />
         </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/horizentalListLoader"
+        android:visibility="gone"
+        android:background="@color/backgroundColor"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/arial"
+            android:textSize="10dp"
+            android:text="chargement..."
+            android:layout_centerInParent="true"
+            />
     </RelativeLayout>
 </RelativeLayout>

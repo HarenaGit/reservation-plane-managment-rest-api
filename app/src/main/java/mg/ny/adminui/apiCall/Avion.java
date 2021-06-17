@@ -24,6 +24,6 @@ public interface Avion {
     @DELETE("avion/{id}")
     Call<Void> deleteAvion(@Path("id") int id);
 
-    @GET("avion")
+    @GET("avion/aviondispo")
     Call<AvionJsonDataModel> getAvionDispo();
 }

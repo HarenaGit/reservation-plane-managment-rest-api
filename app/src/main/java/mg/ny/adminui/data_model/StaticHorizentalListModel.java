@@ -12,6 +12,8 @@ public class StaticHorizentalListModel implements Parcelable {
     private String type;
     private Integer nb_places;
     private Integer nb_colonnes;
+    private Integer num_avion;
+    private AvionDataModel av;
 
     public StaticHorizentalListModel(String text){
         this.text = text;
@@ -21,14 +23,27 @@ public class StaticHorizentalListModel implements Parcelable {
         this.detail = detail;
         this.txt = text;
     }
+    public StaticHorizentalListModel(String text, String detail, String txt){
+        this.text = text;
+        this.detail = detail;
+        this.txt = txt;
+    }
     public StaticHorizentalListModel(FlightDataModel f){
-        this.text = String.valueOf(f.getNum_vol() + "/" + f.getType());
+        this.text = String.valueOf("Vol-" + f.getNum_vol());
     }
     public StaticHorizentalListModel(AvionDataModel av){
+        this.num_avion = av.getNum_avion();
         this.text = av.getType();
+        this.av = av;
+    }
+    public AvionDataModel getAv(){
+        return this.av;
+    }
+    public Integer getNum_avion(){
+        return this.num_avion;
     }
     public StaticHorizentalListModel(ReservVolDataModel r){
-        this.text = String.valueOf(r.getNum_vol()) + " / " + r.getType();
+        this.text = String.valueOf("Vol-" + r.getNum_vol()) + " / " + r.getType();
         this.detail = r.getType();
         this.txt = String.valueOf(r.getNum_vol());
 

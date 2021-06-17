@@ -157,10 +157,11 @@ public class EditplaneActivity extends AppCompatActivity {
             if(value[0]){
                 putAvionChange();
             }
+            loading.setVisibility(View.GONE);
         }
         @Override
         protected void onPostExecute(Void aVoid){
-            loading.setVisibility(View.GONE);
+
         }
     }
 }

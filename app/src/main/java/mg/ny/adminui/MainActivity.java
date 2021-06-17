@@ -44,8 +44,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
  public class MainActivity extends AppCompatActivity {
-
-
     private static final String TAG = MainActivity.class.getSimpleName();
     private ChipNavigationBar bottomMenu;
     private FragmentManager  fragmentManager;
@@ -135,16 +133,16 @@ import retrofit2.Response;
         requestCancel();
         switch (id){
             case R.id.Dashboard:
-                if(planeData == null || planeItem == null){
-                    planeData = planeData();
-                    planeItem = planeItem();
-                }
+                this.activityTitle.setText("Tableau de bord");
                 RemoveItemCallBack rem = (int p) -> {
                     planeData.remove(p);
                     planeItem.remove(p);
                 };
                 fragment = new DashboardFragment(StaticDataGeneration.getPlaneDashItem(), planeData, rem);
-                this.activityTitle.setText("Tableau de bord");
+                fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                progressBar.setVisibility(View.GONE);
+                searchButton.setVisibility(View.GONE);
                 break;
             case R.id.Plane:
                 this.activityTitle.setText("Avion");
@@ -194,19 +192,17 @@ import retrofit2.Response;
             case RequestCode.REQUEST_CODE_ADD_FLIGHT:
                 FlightDataModel currentFlightData = (FlightDataModel) data.getParcelableExtra("data");
                 flightData.add(0, currentFlightData);
-                flightItem.add(0, new StaticHorizentalListModel(String.valueOf(currentFlightData.getNum_vol())));
+                flightItem.add(0, new StaticHorizentalListModel(currentFlightData));
                 break;
             case RequestCode.REQUEST_CODE_EDIT_FLIGHT:
                 FlightDataModel currentFlData = (FlightDataModel) data.getParcelableExtra("data");
                 int currentFlPos = getFlightDataPosition(currentFlData.getNum_vol());
                 if(currentFlPos>=0){
                     flightData.set(currentFlPos, currentFlData);
-                    flightItem.set(currentFlPos, new StaticHorizentalListModel(String.valueOf(currentFlData.getNum_vol())));
+                    flightItem.set(currentFlPos, new StaticHorizentalListModel(currentFlData));
                 }
                 break;
-            case RequestCode.REQUEST_CODE_ADD_RESERV:
-                changeCurrentBottomMenuItemSelected(R.id.Reservation);
-                break;
+
             default:
         }
 
@@ -381,7 +377,6 @@ import retrofit2.Response;
 
      private void updateReservAndVizView(){
          RemoveItemCallBack removeReservationData = (int p) -> {
-             reservationData.remove(p);
          };
          switch (currentFragramentId){
              case R.id.Reservation:
@@ -393,7 +388,7 @@ import retrofit2.Response;
          }
          fragmentManager = getSupportFragmentManager();
          fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
-         if(currentFragramentId != R.id.Dashboard && currentFragramentId != R.id.Visualization) this.searchButton.setVisibility(View.VISIBLE);
+         if(currentFragramentId != R.id.Dashboard && currentFragramentId != R.id.Visualization && currentFragramentId != R.id.Reservation) this.searchButton.setVisibility(View.VISIBLE);
          else this.searchButton.setVisibility(View.GONE);
      }
 
